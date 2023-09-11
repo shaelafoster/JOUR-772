@@ -34,7 +34,7 @@ setwd("~/code/data_journalism_2023_spring")
 ### How to install and load the tidyverse
 
 ```{r}
-install.packages("tidyverse")
+#install.packages("tidyverse")
 library(tidyverse)
 ```
 
