@@ -40,25 +40,51 @@ umd_courses <- read_rds("lab_01.rds")
 ## Answer questions
 
 **Q1** Which department has the highest mean (average) number of seats for its classes? You need to show the department with the highest average first. Which one is the most surprising/interesting to you?
-**A1**
-
+**A1** The Engineering, Cooperative Education classes have the highest average number of seats. The one the most surprising was Air Science since I don't know that many people that have taken those classes.
 ```{r}
+umd_courses |>
+  group_by(department) |>
+  summarise(
+    mean_seats = mean(seats),
+  ) |>
+  arrange(desc(mean_seats))
 ```
+
 
 **Q2** Find out the greatest number of times any individual class has been offered in our dataset. Your code must show the greatest number of classes first. 
-**A2**
+**A2** 22 times
 
 ```{r}
+umd_courses |>
+  group_by(id) |>
+  summarise(
+    count_classes = n()
+  ) |>
+  arrange(desc(count_classes))
 ```
 
-**Q3** Count the number of courses for each instructor and department. Which instructor has taught the most? **A3**
+
+**Q3** Count the number of courses for each instructor and department. Which instructor has taught the most? **A3** Keith Yearwood
 
 ```{r}
+umd_courses |>
+  group_by(instructors, department) |>
+  summarise(
+    count_classes = n()
+  ) |>
+  arrange(desc(count_classes))
 ```
 
-**Q4** Given the results for Q3, what would have made it easier to find the answer? You don't have to know *how* to accomplish this; I want you to describe in words what would make the answer easier to see. How confident are you that the answer you got is the right one, and why? **A4**
+**Q4** Given the results for Q3, what would have made it easier to find the answer? You don't have to know *how* to accomplish this; I want you to describe in words what would make the answer easier to see. How confident are you that the answer you got is the right one, and why? **A4** It would make it easier if there were permanent professors for classes taught in these departments. For the first seven pages the instructors were "N/A" but they had the most classes in their department but not one professor that taught majority of them. I guess this let's me know that they have many professors in their department and one person doesn't teach more classes than another. I'm a little bit confident this answer is correct just because I feel I should be able to arrange the data to show which specific instructor taught the most classes and puts the ones with "N/A" at the bottom. 
 
-**Q5** Take one of the questions you listed in the final question of the pre_lab and try to answer it here in code. If you don't know how to fully answer it, write what code you can and describe in words what else you would need to do. If you got an answer, is it interesting? **A5**
+**Q5** Take one of the questions you listed in the final question of the pre_lab and try to answer it here in code. If you don't know how to fully answer it, write what code you can and describe in words what else you would need to do. If you got an answer, is it interesting? **A5** My new question would be: Which department offered the most classes in Fall 2023? I'm not sure how to start it, but I would want to try and group the classes by department and term but specifically just look at Fall 2023. From there, count the number of classes in that term for each department and arrange them from greatest to least.  
 
 ```{r}
+umd_courses |>
+  group_by(term, department) |>
+   ### In the group by part, I want to specifically say just look at 202308, but everything below this might be correct since I want to the highest number to be first. I feel there should be more code but I'm not sure what it would say. ###
+  summarise(
+    count_classes = n()
+  ) |>
+  arrange(desc(count_classes))
 ```
