@@ -44,7 +44,7 @@ You'll need to load one data set, a CSV file of Maryland campaign expenditures l
 
 ```{r}
 # Load the Maryland expenditures data table
-#maryland_expenses <- read_csv("data/maryland_expenses.csv")
+maryland_expenses <- read_csv("data/maryland_expenses.csv")
 
 cleaned_maryland_expenses <- maryland_expenses |> clean_names()
 
@@ -108,13 +108,27 @@ new_media_expenses |>
 new_media_expenses
 ```
 
-**Q4.** The media expense data you cleaned also has a standardized purpose column. Write code to generate a list of the committees with the total amount of spending on online advertising. How does this list compare to the one from Q1 about top Facebook spenders? Of the top 5 committees who spent the most on Facebook ads from Q1, are there any that appear to have spent *all* of their online advertising dollars on Facebook?
+**Q4.** The media expense data you cleaned also has a standardized purpose column. 
+1. Write code to generate a list of the committees with the total amount of spending on online advertising. 
+2. How does this list compare to the one from Q1 about top Facebook spenders? Of the top 5 committees who spent the most on Facebook ads from Q1, are there any that appear to have spent *all* of their online advertising dollars on Facebook?
 
-**A4.** 
+**A4.** This list is completely different from the list in Q1. There's two name that's similar, Casa in Action PAC and Baron-Williams, although its listed under a different name in Q1. I appears that Ashwani Jain and Franchot spent all their money on Facebook ads while Billy Boniface only spent about $17,000 of $27,000 on Facebooks ads. 
 
 ```{r}
+new_media_expenses |>
+  filter(
+    str_detect(expense_purpose, "Online Advertising")  &
+    str_detect(payee_clean, "Facebook")
+    ) |>
+  group_by(committee_name) |>
+   summarise(
+    total_amount = sum(amount)
+  ) |>
+  arrange(desc(total_amount))
+  
+new_media_expenses
 ```
 
 **Q5** Your editor asks you to summarize your findings about spending on Facebook by Maryland political candidates. How much do we know and what don't we know? What's the best story idea you've found here?
 
-**A5** 
+**A5** From my findings I found that the organizations that have spent the most money on Facebook ads, don't win the elections but the ones that have spent the least amount have either won or come close to winning. Also, that Democrats have been seen to use Facebook ads to reach their audience. I didn't see that many Republicans using Facebook or online advertising but the Democrats depended on it heavily. We know that they are spending this money to advertise on Meta platforms but we don't know the impact it had on the votes they received. Facebook gives us a range of how many people possibly saw it, but we don't know how many of those people that saw the ad shifted to voting for them in the elections. A possible story idea would be analyzing how influential social media ads are for political candidates and how it influences their chances of winning. For someone like Wes Moore, who didn't spend all of his money on Facebook ads, what were his alternatives to campaigning that didn't involve social media ads? Also, why do these other candidates rely so heavily on it? Do they even have confidence that it's going to work?
