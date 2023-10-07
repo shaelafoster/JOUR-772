@@ -27,10 +27,14 @@ homicide_data <- read_csv("data/homicide-data.csv")
 
 ```{r}
 baltimore <- homicide_data |>
-  filter(
-    str_detect(city, "Baltimore")
-         ) |>
-  group_by (reported_date)
+  filter (str_detect(city, "Baltimore")) |>
+  filter (reported_date > 20141231) |>
+   summarise(
+    count=n()
+  )
 
-  
+baltimore
+```
+
+```{r}
 ```
