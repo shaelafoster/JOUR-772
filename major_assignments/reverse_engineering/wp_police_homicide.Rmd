@@ -1,0 +1,36 @@
+---
+title: "WP_Police_Homicides"
+author: "Bridget Shaela Robert Sydney"
+date: "2023-10-06"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Loading of the tidyverse
+
+```{r}
+library(tidyverse)
+library(lubridate)
+library(janitor)
+```
+
+## Loading the WP data
+
+```{r}
+homicide_data <- read_csv("data/homicide-data.csv")
+```
+## Statement 1 (trying to answer it) 
+## As Baltimore has seen a stunning surge of violence, with nearly a killing each day for the past three years in a city of 600,000, homicide arrests have plummeted. (A killing each day for three straight years = 1,095 killings)
+
+```{r}
+baltimore <- homicide_data |>
+  filter(
+    str_detect(city, "Baltimore")
+         ) |>
+  group_by (reported_date)
+
+  
+```
