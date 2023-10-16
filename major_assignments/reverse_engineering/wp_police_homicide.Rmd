@@ -155,30 +155,6 @@ homicide_data |>
 
 ##Statement 3: Of 50 of the nation’s largest cities, Baltimore is one of 34 where police now make homicide arrests less often than in 2014, according to a Washington Post analysis.
 
-Homicide arrests made in major cities in 2014:
-```{r} 
-homicide_data |>
-  filter(disposition == "Closed by arrest") |>
-  filter(between(reported_date, 20140101, 20141231)) |>
-  group_by(city) |>
-  summarise(
-    count=n()
-  ) |>
-  arrange(desc(count))
-```
-
-Homicide arrests made in major cities in 2017:
-
-```{r} 
-homicide_data |>
-  filter(disposition == "Closed by arrest") |>
-  filter(between(reported_date, 20170101, 20171231)) |>
-  group_by(city) |>
-  summarise(
-    count=n()
-  ) |>
-  arrange(desc(count))
-```
 
 ```{r} 
 #Here we are calculating the number of homicides in major cities in 2014
@@ -226,7 +202,7 @@ math:
 Data for 2017-
 
 ```{r}
-#Here we are calculating the number of homicides in Baltimore in 2017
+#Here we are calculating the number of homicides in major cities in 2017
 homicide_data |> 
   filter(str_detect(reported_date, "2017")) |> 
   group_by(city) |> 
