@@ -97,7 +97,7 @@ You can now export that extracted table to a CSV file using the "Export" button.
 
 ### Task 5: Export the CSV file
 
-**Task** Export the CSV file to your pre_lab_05 folder and read it into R by running the following codeblock. What problems do you see with the data? **Answer** The coloumns where the districts are listed fall under "Maryland," but everything else doesn't have a name. Also, there are an excessive amount of periods after the jurisdiction names. 
+**Task** Export the CSV file to your pre_lab_05 folder and read it into R by running the following codeblock. What problems do you see with the data? **Answer** The columns where the districts are listed fall under "Maryland," but everything else doesn't have a name. Also, there are an excessive amount of periods after each jurisdictions name. 
 
 ```{r}
 fentanyl_deaths <- read_csv("tabula-Annual_2020_Drug_Intox_Report.csv") |> clean_names()
@@ -111,7 +111,7 @@ The good news is that we have data we don't have to retype. The bad news is, we 
 
 ### Task 6: Load the data without headers
 
-**Task** Load the data without headers by running the codeblock below. What problems remain? **Answer** The problems that remain are the names for the columns and the periods after each jursidiction are still there. 
+**Task** Load the data without headers by running the codeblock below. What problems remain? **Answer** The problems that remain are the names for the columns are numbers and the periods after each jurisdiction are still there. 
 
 ```{r}
 fentanyl_deaths <- read_csv("tabula-Annual_2020_Drug_Intox_Report.csv", col_names = FALSE) |> clean_names()
