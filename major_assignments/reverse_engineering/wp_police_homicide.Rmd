@@ -17,15 +17,15 @@ library(lubridate)
 library(janitor)
 ```
 ```{r}
-homicide_data <- read_csv("data/homicide-data.csv")
-#mutate(reported_date=ymd(reported_date)) 
+homicide_data <- read_csv("data/homicide-data.csv") |>
+mutate(reported_date=ymd(reported_date)) 
 ```
 ## Statement 1: As Baltimore has seen a stunning surge of violence, with nearly a killing each day for the past three years in a city of 600,000, homicide arrests have plummeted. (A killing each day for three straight years = 1,095 killings)
 
 ```{r}
 baltimore <- homicide_data |>
   filter(str_detect(city, "Baltimore")) |>
-  filter(reported_date > 20141231) |>
+  filter(reported_date > "2014-12-31") |>
   summarise(
     count=n()
   )
@@ -37,22 +37,21 @@ baltimore
 ##Statement 2: City police made an arrest in 41 percent of homicides in 2014; last year, the rate was just 27 percent, a 14 percentage point drop.
 
 ```{r}
-###calculating the number of homicides in 2014
+###number of homicides in 2014
 homicide_data |>
   filter(str_detect(city, "Baltimore")) |>
-  filter(reported_date > 20131231)|>
-  filter(reported_date < 20150101)|>
+  filter(reported_date > "2013-12-31")|>
+  filter(reported_date < "2015-01-01")|>
   summarise(
     count =n()
     )
-balt_homicides
 ```
 ```{r}
 #counting the number of arrests made that closed open homicide cases in 2014. 
 homicide_data |>
   filter(str_detect(city, "Baltimore")) |>
-  filter(reported_date > 20131231)|>
-  filter(reported_date < 20150101)|>
+  filter(reported_date > "2013-12-31")|>
+  filter(reported_date < "2015-01-01")|>
   filter(disposition == "Closed by arrest")|>
   summarise(
     count = n()
@@ -70,8 +69,8 @@ homicide_data |>
 #counting total homicides in 2017
 homicide_data |>
   filter(str_detect(city, "Baltimore")) |>
-  filter(reported_date > 20161231)|>
-  filter(reported_date < 20180101)|>
+  filter(reported_date > "2016-12-31")|>
+  filter(reported_date < "2018-01-01")|>
   summarise(
     count = n()
     )
@@ -158,7 +157,7 @@ homicide_data |>
 
 ```{r} 
 #Here we are calculating the number of homicides in major cities in 2014
-homicide_data |> 
+homicide_2014 <- homicide_data |> 
   filter(str_detect(reported_date, "2014")) |> 
   group_by(city) |> 
   summarize(count_city = n()) |> 
@@ -166,28 +165,19 @@ homicide_data |>
 
 ```
 
-```{r}
-#Here we are calculating the number of homicides in major cities in 2014 that were open and had no arrest
-homicide_data |> 
-  filter(str_detect(disposition, "Open/No arrest")) |> 
-  filter(reported_date, 20140101) |>
-  group_by(city) |> 
-  summarize(count_city = n()) |> 
-  arrange(desc(count_city))
-
-```
-
-
-```{r}
-#Here we are calculating the number of homicides in major cities in 2014 that were closed and had no arrest
-homicide_data |> 
-  filter(str_detect(disposition, "Closed without arrest")) |> 
+```{r} 
+#Homicide made in 2014
+homicide_2014 <- homicide_data |> 
   filter(str_detect(reported_date, "2014")) |> 
   group_by(city) |> 
   summarize(count_city = n()) |> 
   arrange(desc(count_city))
 
 ```
+
+
+
+
 
 
 math:
