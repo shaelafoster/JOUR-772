@@ -71,12 +71,12 @@ Q2. You want to understand if there's a pattern in the day of the week that over
 2. total number of calls and the 
 3. (percentage of calls on that day out of the total number of all calls). Describe your findings to me.
 
-A2.
+A2. I found that Saturday's are the days where the most overdose calls occur making about 16% of the average calls. Thursday's are the days with the least number of calls with 526 calls making up about 13% of calls. 
 
 ```{r}
 days <- overdose_data |>
-  mutate(weekday = wday(date)) |>
-  group_by(weekday) |>
+  mutate(weekday = wday(date, label = TRUE, abbr = FALSE)) |>
+group_by(weekday) |>
   summarise (
     count=n(),
     count/4112*100
@@ -87,8 +87,7 @@ days
 
 Q3. Now let's look at locations. Which ones have the most calls? How would you describe them (feel free to search for more information on them)? Is there anything about the structure of the original data that might make you less confident in the counts by location or date?
 
-A3.
-
+A3. On the original data set, we're missing dates from January 2022, the locations don't have full addresses so maybe providing the zip codes could help group some of these things so we could see what areas has the most calls. Although I can look the addresses up, they show the what the homes look like now and not what it looked like previously so for me it causes some skepticism on if its the correct location. 
 ```{r}
 locations <- overdose_data |>
   group_by(location) |>
@@ -101,4 +100,4 @@ locations
 
 Q4. What's the best story idea or question you've seen as a result of the work you've done in this lab?
 
-A4.
+A4. Possible story ideas would be looking at the homes that have multiple overdose calls, have been renovated, and how much they are on the market for if they are still attempting to be sold. Another story could be looking at the overdose calls that occur at the precinct and looking at when the overdoses are happening, like while people are in custody or anything surrounding that process. Also, if there are officers involved in these cases. I found a case from Woodlawn HS, so a story could be analyzing the programs high schools have put in place preventing students from overdosing or using drugs of any kind. 
