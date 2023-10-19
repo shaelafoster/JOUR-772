@@ -71,7 +71,7 @@ Q2. You want to understand if there's a pattern in the day of the week that over
 2. total number of calls and the 
 3. (percentage of calls on that day out of the total number of all calls). Describe your findings to me.
 
-A2. I found that Saturday's are the days where the most overdose calls occur making about 16% of the average calls. Thursday's are the days with the least number of calls with 526 calls making up about 13% of calls. 
+A2. I found that on Saturday's the most overdose calls occur making up about 16% of the average calls. Thursday's have the least number of calls with 526 calls making up about 13% of calls. 
 
 ```{r}
 days <- overdose_data |>
@@ -87,7 +87,7 @@ days
 
 Q3. Now let's look at locations. Which ones have the most calls? How would you describe them (feel free to search for more information on them)? Is there anything about the structure of the original data that might make you less confident in the counts by location or date?
 
-A3. On the original data set, we're missing dates from January 2022, the locations don't have full addresses so maybe providing the zip codes could help group some of these things so we could see what areas has the most calls. Although I can look the addresses up, they show the what the homes look like now and not what it looked like previously so for me it causes some skepticism on if its the correct location. 
+A3. On the original data set, we're missing dates from January 2022, which makes me wonder why they didn't provide that data. The locations don't raise any questions for me but I think including the zip codes could give us a better view on what zip codes have the most overdose calls. Although I can look up the addresses, they show the what the homes look like now and not what it looked like previously, which brings skepticism on if it's the correct location or if the people called the police still live there or lived there at all. 
 ```{r}
 locations <- overdose_data |>
   group_by(location) |>
@@ -100,4 +100,4 @@ locations
 
 Q4. What's the best story idea or question you've seen as a result of the work you've done in this lab?
 
-A4. Possible story ideas would be looking at the homes that have multiple overdose calls, have been renovated, and how much they are on the market for if they are still attempting to be sold. Another story could be looking at the overdose calls that occur at the precinct and looking at when the overdoses are happening, like while people are in custody or anything surrounding that process. Also, if there are officers involved in these cases. I found a case from Woodlawn HS, so a story could be analyzing the programs high schools have put in place preventing students from overdosing or using drugs of any kind. 
+A4. Possible story ideas would be looking at the homes that have multiple overdose calls, have been renovated, and how much they are on the market for if they are still attempting to be sold. Another story could be looking at the overdose calls that occur at the precinct and looking at when the overdoses are happening, like while people are in custody or anything surrounding that process. Also, if there are officers involved in these cases. I found a case from Woodlawn HS, so we could possibly analyze programs high schools have in place or just put in place to prevent students from overdosing or using drugs of any kind. Also, looking at the protocols they take before contacting the police.
