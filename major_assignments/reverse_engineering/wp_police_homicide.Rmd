@@ -18,33 +18,32 @@ library(janitor)
 ```
 ```{r}
 homicide_data <- read_csv("data/homicide-data.csv") |>
-mutate(reported_date=ymd(reported_date)) 
+mutate(reported_date=ymd(reported_date)) |>
+  mutate(reported_year = year(reported_date))
 ```
 ## Statement 1: As Baltimore has seen a stunning surge of violence, with nearly a killing each day for the past three years in a city of 600,000, homicide arrests have plummeted. (A killing each day for three straight years = 1,095 killings)
 
 ```{r}
 baltimore <- homicide_data |>
-  filter(str_detect(city, "Baltimore")) |>
-  filter(reported_date > "2014-12-31") |>
-  summarise(
-    count=n()
-  )
+  filter(city == "Baltimore")
 
 baltimore
 ```
-### Note: Attempted to chhange the dates to actual dates, but when I filter the data, it doesn't pick up what we're looking for. How can we fix this? Because of this we kept it in the same format as the second milestone. ###
+```{r}
+baltimore <- homicide_data |>
+ filter()
+
+baltimore
+```
 
 ##Statement 2: City police made an arrest in 41 percent of homicides in 2014; last year, the rate was just 27 percent, a 14 percentage point drop.
 
 ```{r}
 ###number of homicides in 2014
-homicide_data |>
-  filter(str_detect(city, "Baltimore")) |>
-  filter(reported_date > "2013-12-31")|>
-  filter(reported_date < "2015-01-01")|>
-  summarise(
-    count =n()
-    )
+baltimore |>
+  filter(reported_year >= "2014") |>
+  filter(disposition == "closed by arrest")
+
 ```
 ```{r}
 #counting the number of arrests made that closed open homicide cases in 2014. 
