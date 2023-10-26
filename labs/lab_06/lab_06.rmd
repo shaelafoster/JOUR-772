@@ -67,27 +67,51 @@ total_call_per_county <- county_calls |>
 total_call_per_county
 ```
 
-Q2. In your combined dataframe that you used in A1, add a column for the month of each call, then write code to show the total number of calls per county and month. Are there any outliers or noteworthy results? Describe the general pattern of the results.
+Q2. In your combined data frame that you used in A1, add a column for the month of each call, then write code to show the total number of calls per county and month. Are there any outliers or noteworthy results? Describe the general pattern of the results.
 
 Then calculate the most calls per county and location. Which location had the most calls - where and what is that location?
 
-A2.
+A2. A noteworthy result is that in August, Cecil and Allegany county have the most 911 calls with 50+. I find it kind of odd that August is the month that produces the most calls. Something also interesting was that Cecil county doesn't show up until around May, so for me that's interesting. The location with the most 911 calls was 314 Grove Neck Rd Earleville, MD in Cecil county with 15 calls.
 
 ```{r}
-county_calls
+county_calls |>
+  mutate(month = month(date, label = TRUE, abbr = FALSE)) |>
+  group_by(county, month) |>
+  summarise(
+    count=n()
+  ) |>
+  arrange(desc(count))
+
+county_calls |>
+  group_by (county, location) |>
+  summarise (
+    count=n()
+  ) |>
+  arrange(desc(count))
+  
 ```
 
 Q3. Let's turn to the Baltimore City data. You're interested in exploring calls in zip codes with a high percentage of children under 18. Write code to isolate calls in zip codes where the percentage of under 18 population is at least 75% and then show the zip code and population and how many calls occurred in each of those zip codes.
 
-Where are those zip codes in the city?
+Where are those zip codes in the city? - They are all in Baltimore city, The 21217 ranks the highest with 774 calls with a population of 37,111. 
 
 Add a column to your code that calculates the number of calls per 1,000 people for those zip codes. To calculate a per capita rate, you might find this short guide handy: [https://observablehq.com/\@palewire/per-capita-calculator](https://observablehq.com/@palewire/per-capita-calculator){.uri}.
 
 Which zip code has the highest rate of calls per 1,000 people? Find the neighborhoods in that zip code that are listed in the data - you can use group_by or distinct to do this. What are some of those neighborhoods, and what else can you tell me about the population there?
 
-A3.
+A3. The zip codes include, 21201, 21202, 21205, 21213, 21216, 21217, and 21223. 21217 ranks the highest with 774 calls with a population of 37,111.  
 
 ```{r}
+maryland_with_baltimore_city |>
+  mutate(calls_per_1000 = (count_calls/1000)) |>
+  filter(PCT_UNDER_18 > '75.0') |>
+  group_by(zip_code, POPULATION) |>
+  summarise(
+    count_calls=n()
+  )
+  
+  
+  
 ```
 
 Q4. Choose your own adventure: I want you to come up with a question you could ask of the Baltimore City data that combines both the calls and the demographic information. You must use both demographics and the overdose call data in your work.
