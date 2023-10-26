@@ -111,7 +111,7 @@ Answer: 23% which is lower than the homicide arrest rate in 2014.
 
 ##Statement 3: Of 50 of the nation’s largest cities, Baltimore is one of 34 where police now make homicide arrests less often than in 2014, according to a Washington Post analysis.
 
-Step 1: Create datafram that calculates homicides per city in 2014
+Step 1: Create data frame that calculates homicides per city in 2014
 ```{r} 
 homicide_city_2014 <- homicide_data |> 
   filter(reported_year == '2014') |>
@@ -161,10 +161,18 @@ arrest_2017 <- homicide_data |>
   arrange(desc(cases_closed))
 ```
 
-
+join the data sets from 2014 and 2017 then join the two into one big data frame
 ```{r}
 
 ```
+```{r}
 
+```
+```{r}
+
+```
+```{r}
+
+```
 
 
