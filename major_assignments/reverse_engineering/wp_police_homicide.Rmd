@@ -15,221 +15,156 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(lubridate)
 library(janitor)
+library(refinr)
 ```
+
+(loading the data into R and correcting the dates and making a separate year column to assist when figuring our further questions.)
 ```{r}
 homicide_data <- read_csv("data/homicide-data.csv") |>
 mutate(reported_date=ymd(reported_date)) |>
   mutate(reported_year = year(reported_date))
 ```
-## Statement 1: As Baltimore has seen a stunning surge of violence, with nearly a killing each day for the past three years in a city of 600,000, homicide arrests have plummeted. (A killing each day for three straight years = 1,095 killings)
+## Statement 1: As Baltimore has seen a stunning surge of violence, with nearly a killing each day for the past three years in a city of 600,000, homicide arrests have plummeted. 
 
+(Checking to see if this statement is true, if so there should be about 1,095 killings that happened within a three year period)
+
+Step 1: filtering to have a data set with only Baltimore in it.)
 ```{r}
 baltimore <- homicide_data |>
   filter(city == "Baltimore")
 
 baltimore
 ```
+Step 2: Calculating # of homicides per year
 ```{r}
-baltimore <- homicide_data |>
- filter()
+baltimore |>
+ group_by(reported_year) |>
+  summarise(
+    count=n()
+  ) |>
+  arrange(reported_year)
 
 baltimore
+```
+Answer: Total deaths over three year span (2015, 2016, 2017) was 1,002. That's close to 1,095 which we predicted would be the range of killings. 
+
+(Checking the number of homicides divided by the number of days in the past three years.)
+```{r}
+1002/365*3
 ```
 
 ##Statement 2: City police made an arrest in 41 percent of homicides in 2014; last year, the rate was just 27 percent, a 14 percentage point drop.
 
+Step 1: Finding homicides in 2014
+Answer: 211 Homicides in Baltimore in 2014
 ```{r}
-###number of homicides in 2014
 baltimore |>
-  filter(reported_year >= "2014") |>
-  filter(disposition == "closed by arrest")
-
-```
-```{r}
-#counting the number of arrests made that closed open homicide cases in 2014. 
-homicide_data |>
-  filter(str_detect(city, "Baltimore")) |>
-  filter(reported_date > "2013-12-31")|>
-  filter(reported_date < "2015-01-01")|>
-  filter(disposition == "Closed by arrest")|>
+  filter(reported_year >= '2014') |>
+  group_by(reported_year) |>
   summarise(
-    count = n()
-    )
-```
-
-```{r}
-#dividing total arrests by total homicides
-86/211
-
-```
-###Answer: The Washington Post correctly calculated the arrest rate for homicides in the city of Baltimore in 2014 as 40.75 or roughly 41%. Now lets calcualte the arrest rate for homicides in 2017. Was it really 27% as mentioned in the Washington Post article? 
-
-```{r}
-#counting total homicides in 2017
-homicide_data |>
-  filter(str_detect(city, "Baltimore")) |>
-  filter(reported_date > "2016-12-31")|>
-  filter(reported_date < "2018-01-01")|>
-  summarise(
-    count = n()
-    )
-
-```
-```{r}
-#counting total homicide cases closed by arrest in 2017
-homicide_data |>
-  filter(str_detect(city, "Baltimore")) |>
-  filter(reported_date > 20161231)|>
-  filter(reported_date < 20180101)|>
-  filter(disposition == "Closed by arrest")|>
-  summarise(
-    count = n()
-    )
-```
-
-```{r}
-#dividing total arrests by total homicides
-93/340
-```
-###Answer: Yes, the arrest rate for homicides in Baltimore in 2017 was 27.35 or roughly 27%. Now we want to see if homicide arrest rates plumeted over 2015 and 2015 as well. So we'll calculate those. 
-
-
-```{r}
-#counting total homicides in 2016
-homicide_data |>
-   filter(str_detect(city, "Baltimore")) |>
-  filter(reported_date > 20151231)|>
-  filter(reported_date < 20170101)|>
-  summarise(count = n())
-```
-###There were 320 homicides in Baltimore in 2016. 
-
-```{r}
-#counting total homicide cases closed by arrest in 2016
-homicide_data |>
-  filter(str_detect(city, "Baltimore")) |>
-  filter(reported_date > 20151231)|>
-  filter(reported_date < 20170101)|>
-  filter(disposition == "Closed by arrest")|>
-  summarise(
-    count = n()
+    count_homicides=n()
   )
 
 ```
 
+Step 2: Finding number of arrests made in homicide cases in 2014
+Answer: 86
 ```{r}
-72/320
+baltimore |>
+  filter(reported_year >= '2014') |>
+  filter(disposition == 'Closed by arrest') |>
+  group_by(reported_year) |>
+  summarise (
+    count_arrests=n()
+  )
+  
 ```
 
-###Anser: the arrest rate in 2016 was roughly 23%. That is lower than 2014's homicide arrest rate. Now we will check for 2015. 
+Step 3: Divide total arrests by total homicides
+```{r}
+86/211*100
+```
+Answer: The Washington Post correctly calculated the arrest rate for homicides in the city of Baltimore in 2014 as 40.75 or roughly 41%. 
+
+Now lets calculate the arrest rate for homicides in 2017. Was it really 27% as mentioned in the Washington Post article? 
+
+Step 1: Diving total arrests by total homicides for 2017. Referencing the previous data.
+Answer: It's correct the arrest rate was 27.35 or roughly 27%. 
 
 ```{r}
-#counting total homicides in 2015
-homicide_data |>
-   filter(str_detect(city, "Baltimore")) |>
-  filter(reported_date > 20141231)|>
-  filter(reported_date < 20160101)|>
-  summarise(count = n())
+93/340*100
 ```
-###There were 342 homicides repored in Baltimore in 2015
 
+Now we want to see if homicide arrest rates plummeted for 2015 and 2016. 
+
+Step 1: Calculate 2015 using data from previous coding. 
+Answer: 25.4%
 ```{r}
-#counting total homicide cases closed by arrest in 2015
-homicide_data |>
-   filter(str_detect(city, "Baltimore")) |>
-  filter(reported_date > 20141231)|>
-  filter(reported_date < 20160101)|>
-  filter(disposition == 'Closed by arrest')|>
-  summarise(count = n())
+87/342*100
 ```
 
-### There were 342 homicides in Baltimore in 2015. The police closed 87 of those cases by arresting someone. Now we need to see the arrest rate. 
+Step 2: Calculating 2016
+Answer: 23% which is lower than the homicide arrest rate in 2014. 
 ```{r}
-87/342
-
+72/320*100
 ```
-### Answer: The arrest rate in 2015 was 25%. So it verifies the statement 
-
 
 ##Statement 3: Of 50 of the nation’s largest cities, Baltimore is one of 34 where police now make homicide arrests less often than in 2014, according to a Washington Post analysis.
 
-
+Step 1: Create datafram that calculates homicides per city in 2014
 ```{r} 
-#Here we are calculating the number of homicides in major cities in 2014
-homicide_2014 <- homicide_data |> 
-  filter(str_detect(reported_date, "2014")) |> 
+homicide_city_2014 <- homicide_data |> 
+  filter(reported_year == '2014') |>
   group_by(city) |> 
-  summarize(count_city = n()) |> 
-  arrange(desc(count_city))
+  summarize(count_homicides= n()) |> 
+  arrange(desc(count_homicides))
 
+homicide_city_2014
+```
+Step 2: Creating data frame that has homicides arrest per city in 2014
+```{r} 
+arrest_2014 <- homicide_data |> 
+  filter(reported_year == '2014') |>
+  filter(disposition == "Closed by arrest") |>
+  group_by(city) |> 
+  summarize(cases_closed = n()) |> 
+  arrange(desc(cases_closed))
+ 
+arrest_2014
 ```
 
-```{r} 
-#Homicide made in 2014
-homicide_2014 <- homicide_data |> 
-  filter(str_detect(reported_date, "2014")) |> 
-  group_by(city) |> 
-  summarize(count_city = n()) |> 
-  arrange(desc(count_city))
-
-```
-
-
-
-
-
-
-math:
+Step 3: Creating data fram with homicides per city in 2017
 ```{r}
-#Here we are finding the percent of no arrests in both closed and open cases in 2014
-13+112
-
-(125/211)*100
+homicide_2017 <- homicide_data |>
+  filter(reported_year == '2017') |>
+  group_by(city) |>
+  summarise(
+    count_homicides =n()
+  ) |>
+  arrange(desc(count_homicides))
 ```
+
+Step 4: Creating data frame that has closed by arrest per city in 2017
+
 125 non arrests in 2014 out of 211 homicides, 59.24% no arrest
 
 Data for 2017-
 
 ```{r}
-#Here we are calculating the number of homicides in major cities in 2017
-homicide_data |> 
-  filter(str_detect(reported_date, "2017")) |> 
-  group_by(city) |> 
-  summarize(count_city = n()) |> 
-  arrange(desc(count_city))
-
+arrest_2017 <- homicide_data |> 
+  filter(reported_year == '2017') |>
+  filter(disposition == "Closed by arrest") |>
+  group_by(city) |>
+  summarise(
+    cases_closed=n()
+  ) |>
+  arrange(desc(cases_closed))
 ```
 
 
 ```{r}
-#Here we are calculating the number of homicides in Baltimore in 2017 that were open and had no arrest
-homicide_data |> 
-  filter(str_detect(disposition, "Open/No arrest")) |> 
-  filter(str_detect(reported_date, "2017")) |> 
-  group_by(city) |> 
-  summarize(count_city = n()) |> 
-  arrange(desc(count_city))
 
 ```
 
-```{r}
-#Here we are calculating the number of homicides in major cities in 2017 that were closed and had no arrest
-homicide_data |> 
-  filter(str_detect(disposition, "Closed without arrest")) |> 
-  filter(str_detect(reported_date, "2017")) |> 
-  group_by(city) |> 
-  summarize(count_city = n()) |> 
-  arrange(desc(count_city))
 
-```
 
-```{r}
-#Here we are finding the percent of no arrests in both closed and open cases in 2017
-11+236
-
-(247/340)*100
-```
-
-247 non arrests in 2017 out of 340 homicides, 72.65% no arrest
-
-Answer: We can confirm that Baltimore is one of 34 major cities that makes arrest in 2017 less than 2014.
