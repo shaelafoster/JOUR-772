@@ -93,30 +93,36 @@ county_calls |>
 
 Q3. Let's turn to the Baltimore City data. You're interested in exploring calls in zip codes with a high percentage of children under 18. Write code to isolate calls in zip codes where the percentage of under 18 population is at least 75% and then show the zip code and population and how many calls occurred in each of those zip codes.
 
-Where are those zip codes in the city? - They are all in Baltimore city, The 21217 ranks the highest with 774 calls with a population of 37,111. 
+Where are those zip codes in the city? -  The 21217 ranks the highest with 774 calls with a population of 37,111. 
 
 Add a column to your code that calculates the number of calls per 1,000 people for those zip codes. To calculate a per capita rate, you might find this short guide handy: [https://observablehq.com/\@palewire/per-capita-calculator](https://observablehq.com/@palewire/per-capita-calculator){.uri}.
 
 Which zip code has the highest rate of calls per 1,000 people? Find the neighborhoods in that zip code that are listed in the data - you can use group_by or distinct to do this. What are some of those neighborhoods, and what else can you tell me about the population there?
 
-A3. The zip codes include, 21201, 21202, 21205, 21213, 21216, 21217, and 21223. 21217 ranks the highest with 774 calls with a population of 37,111.  
-
+A3. The zip codes include, 21201 (Seton Hill), 21202 (East Baltimore, Inner Harbor), 21205 (Orangeville Industrial Area, East Baltimore), 21213 (Belair-Edison), 21216 (Walbrook), 21217 (Druid Hill), and 21223 (South Baltimore). 21217 ranks the highest with 774 calls with a population of 37,111. The Penn North neighborhood within the 21217 zip code has the highest rate of calls with about 4.7 calls per 1,000 people. After doing research, I found the Penn North neighborhood is predominantly Black. Also, that it shares the same population as Sandtown-Winchester and Upton.
 ```{r}
 maryland_with_baltimore_city |>
-  mutate(calls_per_1000 = (count_calls/1000)) |>
   filter(PCT_UNDER_18 > '75.0') |>
-  group_by(zip_code, POPULATION) |>
-  summarise(
-    count_calls=n()
-  )
-  
-  
-  
+  group_by(zip_code, POPULATION, neighborhood) |>
+ summarise(
+    count=n()
+  ) |>
+  mutate(calls_per_1000 = (count/POPULATION)*1000) |>
+  arrange(desc(count))
+
 ```
 
 Q4. Choose your own adventure: I want you to come up with a question you could ask of the Baltimore City data that combines both the calls and the demographic information. You must use both demographics and the overdose call data in your work.
 
-A4:
+Q4: I'm interested in exploring calls within specific neighborhoods that have a high percentage of Black/Non-Hispanic people. Also, what is the average rate of calls per housing units. For every 1000 homes, how many calls are being made?
+
+A4: Similar to the above question, Penn North has the most average calls with 8.3 calls per 1,000 housing units. What's interesting and different from the previous data, is that Downtown is not included at all, but 
 
 ```{r}
+maryland_with_baltimore_city |>
+  filter(PCT_BLACK_NON_HISPANIC > '70.0') |>
+  group_by(neighborhood, HOUSING_UNITS) |>
+  summarise(count=n()) |>
+  mutate(housing_per_1000 = (count/HOUSING_UNITS)*1000) |>
+  arrange(desc(count)) 
 ```
