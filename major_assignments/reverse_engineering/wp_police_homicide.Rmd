@@ -86,6 +86,7 @@ Step 3: Divide total arrests by total homicides
 ```
 Answer: The Washington Post correctly calculated the arrest rate for homicides in the city of Baltimore in 2014 as 40.75 or roughly 41%. 
 
+
 Now lets calculate the arrest rate for homicides in 2017. Was it really 27% as mentioned in the Washington Post article? 
 
 Step 1: Diving total arrests by total homicides for 2017. Referencing the previous data.
@@ -133,7 +134,7 @@ arrest_2014 <- homicide_data |>
 arrest_2014
 ```
 
-Step 3: Creating data fram with homicides per city in 2017
+Step 3: Creating data frame with homicides per city in 2017
 ```{r}
 homicide_2017 <- homicide_data |>
   filter(reported_year == '2017') |>
@@ -146,10 +147,7 @@ homicide_2017 <- homicide_data |>
 
 Step 4: Creating data frame that has closed by arrest per city in 2017
 
-125 non arrests in 2014 out of 211 homicides, 59.24% no arrest
-
-Data for 2017-
-
+Data for 2017:
 ```{r}
 arrest_2017 <- homicide_data |> 
   filter(reported_year == '2017') |>
@@ -161,18 +159,71 @@ arrest_2017 <- homicide_data |>
   arrange(desc(cases_closed))
 ```
 
-join the data sets from 2014 and 2017 then join the two into one big data frame
+Step 5: Joining the data sets from 2014
 ```{r}
+arrest_rate_2014 <- homicide_city_2014 |> left_join(arrest_2014, join_by(city)) |>
+  mutate(arrest_rate = (cases_closed/count_homicides)*100)
 
+arrest_rate_2014
 ```
+Step 6: Joining the 2017 data sets
 ```{r}
-
+arrest_rate_2017 <- homicide_2017 |> left_join(arrest_2017, join_by(city)) |>
+  mutate(arrest_rate = (cases_closed/count_homicides)*100)
 ```
+
+Step 7: Combine the 2014 + 2017 data to compare the arrest rates and see if there are about 34 cities who's rate has decreased. 
 ```{r}
+all_arrest_rate <- arrest_rate_2014 |> left_join(arrest_rate_2017, join_by(city)) |>
+rename(total_homicides_2014 = count_homicides.x, closed_cases_2014 = cases_closed.x, arrest_rate_2014 = arrest_rate.x, total_homicides_2017 = count_homicides.y, closed_cases_2017 = cases_closed.y, arrest_rate_2017 = arrest_rate.y)
 
+all_arrest_rate
 ```
+Answer: We can confirm that there are 34 cities, including Baltimore who's arrest rate decreased. 
+
+## Statement 4: And while most cities saw their arrest rates drop gradually, Baltimore’s decline was sudden — plummeting 15 percentage points in 2015, after Gray’s death, the largest single-year drop for any city already solving less than half its homicides.
+
+Step 1: Create data frame for all homicides per city in 2015
 ```{r}
+city_homicide_2015 <- homicide_data |>
+  filter(reported_year == '2015') |>
+  group_by(city) |>
+  summarise (homicides = n()) |>
+  arrange(desc(homicides))
+```
 
+Step 2: Create data frame for all closed cases for homicides in 2015
+```{r}
+city_closed_2015 <- homicide_data |>
+  filter(reported_year == '2015') |>
+  filter(disposition == "Closed by arrest") |>
+  group_by(city) |>
+  summarise(cases_closed=n()) |>
+  arrange(desc(cases_closed))
+```
+
+Step 3: Join the data frames and create a column called "arrest rate" to display the arrest rate for 2015 for all cities
+```{r}
+arrest_rate_2015 <- city_homicide_2015 |> left_join(city_closed_2015, join_by(city)) |>
+  mutate(arrest_rate = (cases_closed/homicides)*100) 
+```
+
+Step 4: Now let's compare them to previous years
+```{r}
+arrest_rate_change <- arrest_rate_2014 |> left_join(arrest_rate_2015, join_by(city)) |>
+  rename(total_homicides_2014 = count_homicides, closed_cases_2014 = cases_closed.x, arrest_rate_2014 = arrest_rate.x, total_homicides_2017 = homicides, closed_cases_2017 = cases_closed.y, arrest_rate_2017 = arrest_rate.y)
+
+arrest_rate_change
 ```
 
 
+```{r}
+```
+
+
+```{r}
+```
+
+
+```{r}
+```
