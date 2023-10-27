@@ -55,7 +55,7 @@ maryland_with_baltimore_city <- baltimore_911 |> left_join(maryland, join_by(zip
 
 Q1. Let's start with our data from Allegany, Cecil and Carroll counties. Write code to generate a dataframe that shows the total number of calls for each county. What's the order of counties from most calls to least?
 
-A1. Carroll County has the most 911 calls out of the three counties listed with 448 calls.
+A1. Carroll County has the most 911 calls out of the three counties listed with 448 calls. Cecil is next with 438 and Allegany is last with 418. 
 
 ```{r}
 total_call_per_county <- county_calls |>
@@ -71,7 +71,7 @@ Q2. In your combined data frame that you used in A1, add a column for the month 
 
 Then calculate the most calls per county and location. Which location had the most calls - where and what is that location?
 
-A2. A noteworthy result is that in August, Cecil and Allegany county have the most 911 calls with 50+. I find it kind of odd that August is the month that produces the most calls. Something also interesting was that Cecil county doesn't show up until around May, so for me that's interesting. The location with the most 911 calls was 314 Grove Neck Rd Earleville, MD in Cecil county with 15 calls.
+A2. A noteworthy result is that in August, Cecil and Allegany county have the most 911 calls with 50+. I find it odd that August is the month that produces the most calls. I wonder if this has to do with a change of seasons or the beginning of the school year. The location with the most 911 calls was 314 Grove Neck Rd Earleville, MD in Cecil county with 15 calls.
 
 ```{r}
 county_calls |>
@@ -114,15 +114,16 @@ maryland_with_baltimore_city |>
 
 Q4. Choose your own adventure: I want you to come up with a question you could ask of the Baltimore City data that combines both the calls and the demographic information. You must use both demographics and the overdose call data in your work.
 
-Q4: I'm interested in exploring calls within specific neighborhoods that have a high percentage of Black/Non-Hispanic people. Also, what is the average rate of calls per housing units. For every 1000 homes, how many calls are being made?
+Q4: I'm interested in exploring calls within neighborhoods that have a low percentage of Black/Non-Hispanic people. Also, looking at what day of the week has the most calls in these neighborhoods. 
 
-A4: Similar to the above question, Penn North has the most average calls with 8.3 calls per 1,000 housing units. What's interesting and different from the previous data, is that Downtown is not included at all, but 
+A4:  The Brooklyn neighborhood has the least percentage of Black residents and their calls frequently occur on Tuesday's with 28 calls occurring. Downtown is right behind them with 24 calls.
 
 ```{r}
 maryland_with_baltimore_city |>
-  filter(PCT_BLACK_NON_HISPANIC > '70.0') |>
-  group_by(neighborhood, HOUSING_UNITS) |>
+  filter(PCT_BLACK_NON_HISPANIC < '60.0') |>
+  mutate(weekday = wday(date, label = TRUE, abbr = FALSE)) |>
+  group_by(neighborhood, weekday) |>
   summarise(count=n()) |>
-  mutate(housing_per_1000 = (count/HOUSING_UNITS)*1000) |>
-  arrange(desc(count)) 
+  arrange(desc(count))
+  
 ```
