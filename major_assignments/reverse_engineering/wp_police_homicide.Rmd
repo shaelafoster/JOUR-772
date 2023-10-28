@@ -121,7 +121,7 @@ homicide_city_2014 <- homicide_data |>
 homicide_city_2014
 ```
 
-Step 2: Creating data frame that has homicides arrest per city in 2014
+Step 2: Creating data frame that has homicide arrests per city in 2014
 ```{r} 
 arrest_2014 <- homicide_data |> 
   filter(reported_year == '2014') |>
@@ -144,7 +144,7 @@ homicide_2017 <- homicide_data |>
   arrange(desc(count_homicides))
 ```
 
-Step 4: Creating data frame that has closed by arrest per city in 2017
+Step 4: Creating data frame that has homicide arrests per city in 2017
 ```{r}
 arrest_2017 <- homicide_data |> 
   filter(reported_year == '2017') |>
@@ -170,7 +170,7 @@ arrest_rate_2017 <- homicide_2017 |> left_join(arrest_2017, join_by(city)) |>
   mutate(arrest_rate = (cases_closed/count_homicides)*100)
 ```
 
-Step 7: Combine the 2014 + 2017 data to compare the arrest rates and see if there are about 34 cities who's rate has decreased. 
+Step 7: Combine the 2014 + 2017 data to compare the arrest rates and see if there are about 34 cities who's rate have decreased. 
 ```{r}
 all_arrest_rate <- arrest_rate_2014 |> left_join(arrest_rate_2017, join_by(city)) |>
 rename(total_homicides_2014 = count_homicides.x, closed_cases_2014 = cases_closed.x, arrest_rate_2014 = arrest_rate.x, total_homicides_2017 = count_homicides.y, closed_cases_2017 = cases_closed.y, arrest_rate_2017 = arrest_rate.y)
@@ -189,7 +189,7 @@ city_homicide_2015 <- homicide_data |>
   arrange(desc(homicides))
 ```
 
-Step 2: Create data frame for all closed cases for homicides in 2015
+Step 2: Create data frame for all homicide cases closed by arrest in 2015.
 ```{r}
 city_closed_2015 <- homicide_data |>
   filter(reported_year == '2015') |>
@@ -199,7 +199,7 @@ city_closed_2015 <- homicide_data |>
   arrange(desc(cases_closed))
 ```
 
-Step 3: Join the data frames and create a column called "arrest rate" to display the arrest rate for 2015 for all cities
+Step 3: Join the data frames and create a column called "arrest rate" to display the arrest rate in 2015 for all cities
 ```{r}
 arrest_rate_2015 <- city_homicide_2015 |> left_join(city_closed_2015, join_by(city)) |>
   mutate(arrest_rate = (cases_closed/homicides)*100) 
@@ -215,13 +215,12 @@ Step 5: Subtract arrest rate of 2014 to 2015
 ```{r}
 40-25
 ```
-Answer: We can prove that there has been a 15% change of the arrest rate in Baltimore following the death of Freddie Gray. 
+Answer: We can prove that there's been a 15% change of the arrest rate in Baltimore following the death of Freddie Gray. 
 
 
 ##Statement 5: For most of the decade before 2015, Baltimore’s annual homicide arrest rate hovered at about 40 percent. 
 
 Step 1: Create new data frame to show number of homicides in Baltimore from 2007-2014. We already have a data frame with the Baltimore homicide data, so now we're filtering to look at a specific time period. 
-
 ```{r}
 seven_year_baltimore_homicide <- baltimore |>
   filter(reported_year < '2015') |>
