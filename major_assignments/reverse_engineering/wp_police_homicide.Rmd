@@ -32,8 +32,6 @@ Step 1: filtering to have a data set with only Baltimore in it.)
 ```{r}
 baltimore <- homicide_data |>
   filter(city == "Baltimore")
-
-baltimore
 ```
 
 Step 2: Calculating # of homicides per year
@@ -44,8 +42,6 @@ baltimore |>
     count=n()
   ) |>
   arrange(reported_year)
-
-baltimore
 ```
 Answer: Total deaths over three year span (2015, 2016, 2017) was 1,002. That's close to 1,095 which we predicted would be the range of killings. 
 
@@ -179,7 +175,6 @@ Step 7: Combine the 2014 + 2017 data to compare the arrest rates and see if ther
 all_arrest_rate <- arrest_rate_2014 |> left_join(arrest_rate_2017, join_by(city)) |>
 rename(total_homicides_2014 = count_homicides.x, closed_cases_2014 = cases_closed.x, arrest_rate_2014 = arrest_rate.x, total_homicides_2017 = count_homicides.y, closed_cases_2017 = cases_closed.y, arrest_rate_2017 = arrest_rate.y)
 
-all_arrest_rate
 ```
 Answer: We can confirm that there are 34 cities, including Baltimore who's arrest rate decreased. 
 
@@ -214,8 +209,6 @@ Step 4: Now let's compare them to previous years
 ```{r}
 arrest_rate_change <- arrest_rate_2014 |> left_join(arrest_rate_2015, join_by(city)) |>
   rename(total_homicides_2014 = count_homicides, closed_cases_2014 = cases_closed.x, arrest_rate_2014 = arrest_rate.x, total_homicides_2017 = homicides, closed_cases_2017 = cases_closed.y, arrest_rate_2017 = arrest_rate.y)
-
-arrest_rate_change
 ```
 
 Step 5: Subtract arrest rate of 2014 to 2015
@@ -227,167 +220,25 @@ Answer: We can prove that there has been a 15% change of the arrest rate in Balt
 
 ##Statement 5: For most of the decade before 2015, Baltimore’s annual homicide arrest rate hovered at about 40 percent. 
 
-Step 1: Isolate data for only Baltimore looking at 2007-2014 and calculate arrest rates for each year.
-
-2007:
-```{r}
-baltimore|>
-  filter(reported_year == '2007') |>
-  summarise(count_homicides = n())
-```
+Step 1: Create new data frame to show number of homicides in Baltimore from 2007-2014. We already have a data frame with the Baltimore homicide data, so now we're filtering to look at a specific time period. 
 
 ```{r}
-baltimore|>
-  filter(reported_year == '2007')|>
-  filter(disposition == 'Closed by arrest')|>
-  summarise(count_homicides = n())
+seven_year_baltimore_homicide <- baltimore |>
+  filter(reported_year < '2015') |>
+  group_by(reported_year) |>
+  summarise (count_homicides = n())
 ```
-
+Step 2: Create data frame for seven years of homicide arrests
 ```{r}
-(117/280)*100
+seven_year_baltimore_arrest <- baltimore |>
+  filter(reported_year < '2015') |>
+  filter(disposition == "Closed by arrest") |>
+  group_by(reported_year) |>
+  summarise(count_arrest=n())
 ```
-
-2007 arrest rate: 41.78%
-
-
-2008:
+Step 3: Join the two data frames and create a column with the arrest rate
 ```{r}
-baltimore |>
-  filter(reported_year == '2008') |>
-  summarise(count_homicides = n())
+seven_year_baltimore_homicide_arrests <- seven_year_baltimore_homicide |> left_join(seven_year_baltimore_arrest, join_by(reported_year)) |>
+  mutate(seven_year_arrest_rate = (count_arrest/count_homicides)*100)
 ```
-
-```{r}
-baltimore |>
-  filter(reported_year == '2008') |>
-  filter(disposition == 'Closed by arrest')|>
-  summarise(count_homicides = n())
-```
-
-```{r}
-(95/234)*100
-```
-
-2008 arrest rate: 40.59%
-
-
-2009:
-```{r}
-baltimore |>
-  filter(reported_year == '2009')|>
-  summarise(count_homicides = n())
-```
-
-```{r}
-baltimore |>
-  filter(reported_year == '2009')|>
-  filter(disposition == 'Closed by arrest')|>
-  summarise(count_homicides = n())
-```
-
-```{r}
-(104/236)*100
-```
-2009 arrest rate: 44.06%
-
-2010:
-```{r}
-baltimore |>
-  filter(reported_year == '2010') |>
-  summarise(count_homicides = n())
-```
-
-```{r}
-baltimore |>
-  filter(reported_year == '2010') |>
-  filter(disposition == 'Closed by arrest')|>
-  summarise(count_homicides = n())
-```
-
-```{r}
-(93/220)*100
-```
-2010 arrest rate: 42.27%
-
-
-2011: 
-```{r}
-baltimore |>
-  filter(reported_year == '2011') |>
-  summarise(count_homicides = n())
-```
-
-```{r}
-baltimore |>
-  filter(reported_year == '2011') |>
-  filter(disposition == 'Closed by arrest')|>
-  summarise(count_homicides = n())
-```
-
-```{r}
-(77/197)*100
-```
-2011 arrest rate: 39.08%
-
-
-2012:
-```{r}
-baltimore |>
-  filter(reported_year == '2012') |>
-  summarise(count_homicides = n())
-```
-
-```{r}
-baltimore |>
-  filter(reported_year == '2012')|>
-  filter(disposition == 'Closed by arrest')|>
-  summarise(count_homicides = n())
-```
-
-```{r}
-(86/216)*100
-
-```
-2012 arrest rate: 39.81%
-
-
-2013:
-```{r}
-baltimore |>
-  filter(reported_year == '2013')|>
-  summarise(count_homicides = n())
-```
-
-```{r}
-baltimore|>
-  filter(reported_year == '2013')|>
-  filter(disposition == 'Closed by arrest')|>
-  summarise(count_homicides = n())
-```
-
-```{r}
-(92/231)*100
-```
-2013 arrest rate: 39.82%
-
-
-Based on previous data, we already have a data frame saved with the arrest rate in 2014. Below is the math verifying it. 
-```{r}
-(86/211)*100
-```
-2014 arrest rate: 40.75%
-
-
-
-Step 2: Now we can take these percentages and figure out the average arrest rate from 2007 to 2014. 
-```{r}
-(41.78+40.59+44.06+42.27+39.08+39.81+39.82+40.75)/8
-```
-
-The average arrest rate is 41.02%. 
-
-Answer: After completing the data, we ca confirm that the average arrest rate for the decade before 2015 was hovering 41% in the city of Baltimore. 
-
-
-
-Overall: From completing the data analysis, we can confirm the Washington Post correctly used and detailed data throughout their article. 
+Answer: After completing the data, we can confirm that the average arrest rate from 2007-2014 hovered around 40%.
