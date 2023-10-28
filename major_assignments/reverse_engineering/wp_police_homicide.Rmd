@@ -215,7 +215,7 @@ Step 5: Subtract arrest rate of 2014 to 2015
 ```{r}
 40-25
 ```
-Answer: We can prove that there's been a 15% change of the arrest rate in Baltimore following the death of Freddie Gray. 
+Answer: We can prove that arrest rates in Baltimore dropped by 15 percentage points following the death of Freddie Gray.
 
 
 ##Statement 5: For most of the decade before 2015, Baltimore’s annual homicide arrest rate hovered at about 40 percent. 
