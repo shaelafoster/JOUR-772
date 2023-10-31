@@ -1,7 +1,7 @@
 ---
 title: "pre_lab_07.Rmd"
-author: "derek willis"
-date: "2023-03-16"
+author: "Shaela Foster"
+date: "2023-10-30"
 output: html_document
 ---
 
@@ -100,7 +100,7 @@ alldata <- p00 |> inner_join(p10)
 
 And now we calculate the percent change.
 
-**Task** Run the following codeblock to calculate the percentage change and put the state with the largest percentage growth below. **Answer**
+**Task** Run the following codeblock to calculate the percentage change and put the state with the largest percentage growth below. **Answer** Nevada had the largest percentage change of all the states listed. 
 
 ```{r}
 alldata |> mutate(change = ((Population2010-Population2000)/Population2000)*100) |> arrange(desc(change))
@@ -156,9 +156,9 @@ md |>
 
 As you can see, some of the error bars are quite wide. Some are narrow. But if the bars overlap, it means the difference between the two counties is within the margin of error, and the differences aren't statistically significant.
 
-Is the difference between Calvert and Montgomery significant? **Answer**
+Is the difference between Calvert and Montgomery significant? **Answer** No, they aren't statistically significant since Montgomery County overlaps with the beginning portion of Calvert County's margin of error.
 
-Is the difference between Howard and everyone else significant? **Answer**
+Is the difference between Howard and everyone else significant? **Answer** Yes it is since it doesn't overlap with any of the other counties listed. 
 
 ### Task 7: Joining Multiple Years Together
 
@@ -209,7 +209,7 @@ md_high_schools <- read_csv("data/md_high_schools.csv") |>
 
 The Census Bureau has Zip Code Tabulation Areas - they are mostly identical to what we know as zip codes, with some small differences. In most cases we can use them interchangeably.
 
-**Task** Let's get ZCTA household income data from the ACS using tidycensus for each zip code in `md_high_schools`. Run the following codeblock to retrieve household income data from 2019 - the latest year for which we have it for all Maryland ZCTAs - first, then join them to `md_high_schools` using the GEOID column. We'll also create min and max values and drop any rows where we don't have income estimates. What's one question we could ask of this data now that we have enrollment percentages and household income for the high school's zip code? What might make the answer harder to interpret? **Answer**
+**Task** Let's get ZCTA household income data from the ACS using tidycensus for each zip code in `md_high_schools`. Run the following codeblock to retrieve household income data from 2019 - the latest year for which we have it for all Maryland ZCTAs - first, then join them to `md_high_schools` using the GEOID column. We'll also create min and max values and drop any rows where we don't have income estimates. What's one question we could ask of this data now that we have enrollment percentages and household income for the high school's zip code? What might make the answer harder to interpret? **Answer** We could ask what is the average percentage of high schools in each county who's students enroll in college and what is the minimum income in these counties. What might make this difficult is that some counties have more schools than others, so it might not be a fair comparison of the entire county. 
 
 ```{r}
 md_zipcodes <- get_acs(geography="zcta", variables = "B19013_001", state='MD', year=2019)
@@ -229,4 +229,4 @@ md_high_schools_with_acs |>
   summarize(avg_income = mean(estimate), count = n())
 ```
 
-**Task** What is another question you could ask of this data? **Answer**
+**Task** What is another question you could ask of this data? **Answer** We could look on a more detailed level by looking at which high school in the state has the most college enrollment and what the maximum income looks like in that area. 
