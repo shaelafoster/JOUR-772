@@ -1,0 +1,152 @@
+---
+title: "lab_08"
+author: "Shaela Foster"
+date: "2023-11-08"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load libraries and establish settings
+
+**Task** Create a codeblock and load appropriate packages and settings for this lab. We'll be making some charts, working with dates and retrieving Census data.
+
+```{r}
+library(tidyverse)
+library(lubridate)
+library(ggthemes)
+library(tidycensus)
+```
+
+## Load and modify data
+
+**Task** Create a codeblock and load the following data from the data folder:
+
+* Prince George's County 911 Overdose Calls
+
+You will need to create columns for the date, week and month based on the existing `datetime` column.
+
+```{r}
+pg_overdose_calls <- read_csv("data/prince_georges_2022_overdoses.csv") |>
+  mutate(month = month(datetime, label=TRUE)) |>
+  mutate(week = week(datetime)) |>
+  mutate(date=date(datetime))
+```
+
+## Questions 
+
+**Q1.** Which month saw the greatest percentage of total calls? Create a dataframe that calculates the percentage of all calls that each month's calls represents. Make a bar chart from that dataframe. Your bar chart must have:
+
+* A clear title that states the main idea/finding
+* Good labels for the x & y axis and a caption for the source, which is Prince George's County EMS.
+* Readable bars - the values shouldn't be overlapping
+
+Compare the results here to those from the pre_lab_08 bar chart - are there major differences in the months with the highest and lowest figures? Describe that below.
+
+**A1.** Compared to the bar chart in the pre lab, there is a big difference since August is the month with the highest calls in the pre lab, but December has the highest calls in the lab. In the pre lab, August has the highest, but its the second to lowest in the lab. This is the same thing for December in the lab, its the lowest in the pre lab but the highest in the lab. I chose not to put the data in descending order, since I would want the audience to see how the percent changes as the year goes on. I think having it in the other order would be confusing for some people to read. 
+
+```{r}
+pg_percent_calls <- pg_overdose_calls |>
+  group_by(month) |>
+  summarise(
+    total_calls=n()
+  ) |>
+  mutate(percentage=(total_calls/sum(total_calls))*100) |>
+  arrange(desc(total_calls))
+```
+
+```{r}
+pg_percent_calls |>
+  ggplot() +
+  geom_bar(aes(x=month, weight=percentage)) +
+  theme_economist() +
+  labs(
+    title="Percentage of total overdose calls per month",
+    x = "month",
+    y = "percentage",
+    caption = "source: Prince George's County EMS"
+  )
+  
+```
+
+**Q2.** Let's visualize this data on a weekly basis using a line chart. As in Q1, generate a dataframe with the total number of calls for each week, and then create a line chart to show the distribution of calls over time. Your line chart must have:
+
+* A clear title that states the main idea/finding
+* Good labels for the x & y axis and a caption for the source, which is Prince George's County EMS.
+* Readable labels
+
+Describe the pattern of results; you may want to look at the data to dig into particular outliers.
+
+**A2.** In the beginning of the year, the calls stayed around 30 and under. Once week 28 happened which is around the second week of July. The year ended with four overdose calls on week 53, which to me seems odd when on the other weeks, they have about 20+ calls. In the data, they counted week 53 with one day attached to it, but 2022 was a leap year so that might be to blame for the low number of calls. 
+
+```{r}
+pg_week_calls <- pg_overdose_calls |>
+  group_by(week) |>
+  summarise(
+    total_calls=n()
+  )
+
+pg_week_calls
+```
+
+```{r}
+pg_week_calls |>
+  ggplot() +
+  geom_line(aes(x=week, y=total_calls)) +
+  labs(
+    title="Total number of calls per week in 2022",
+    x = "Week",
+    y = "Total Calls",
+    caption = "source: Prince George's County EMS"
+  )
+```
+**Q3.**  A scatterplot is a type of chart that helps us see relationships between two variables. One variable goes on the x axis, the other on the y axis.  For each row/observation in our data, a scatterplot puts a circle (or a "point") where the two variables intersect on a grid. 
+
+Statisticians use scatterplots to show graphically whether one variable is correlated -- related, in a statistical sense -- with another variable.  A classic example is the [relationship between ice cream sales and temperature](https://www.mathsisfun.com/data/scatter-xy-plots.html). The scatterplot below -- press play to load the image -- shows that relationship, that an increase in temperature is associated with an increase in ice cream sales. When it's 12C, sales are 200 dollars, and when it's hotter, 25C, sales are 600 dollars.
+
+```{r}
+knitr::include_graphics("https://www.mathsisfun.com/data/images/scatter-ice-cream1.svg")
+```
+
+We're going to use a scatterplot a little differently, to get a visual sense of two key variables: 
+
+Our question is: does the median income in a zip code have any relationship to the number of overdose 911 calls in that zip code?
+
+To answer this question, do the following:
+
+1. Generate a dataframe with the number of 911 calls for each zip code.
+2. Get data from the Census Bureau showing median household income for Maryland zip codes.
+3. Join those two dataframes on their zip code columns, starting with the 911 calls dataframe.
+4. Make a scatterplot showing the total calls and median income. I didn't show you how to do this, so look it up! Googling "ggplot scatterplot" is a good start.
+5. Give it an appropriate title, source, and x and y axis titles.
+6. Add a label for each point that shows the zip code using geom_text() - see some examples of its use at https://ggplot2.tidyverse.org/reference/geom_text.html#ref-examples. Try to make the names as easy to read as possible by avoiding overlap.
+7. In the answer space below, describe what you see and answer the questions posed above. In a general sense, what do you think this means? Feel free to consider the actual raw values: how would you report out the main point(s) of this chart?
+
+**A3.**  
+
+```{r}
+pg_zipcode_calls <- pg_overdose_calls |>
+  group_by(zipcode) |>
+  summarise(
+    total_calls=n()
+  )
+
+pg_zipcode_calls
+```
+
+```{r}
+acs5 <- load_variables(2019, "acs5", cache = TRUE)
+```
+
+```{r}
+md <- get_acs(geography = "zcta",
+              variables = c(median_income = "B19013_001"),
+              state = "MD",
+              year = 2019)
+```
+
+```{r}
+
+```
