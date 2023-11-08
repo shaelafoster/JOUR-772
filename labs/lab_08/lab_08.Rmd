@@ -124,7 +124,7 @@ To answer this question, do the following:
 6. Add a label for each point that shows the zip code using geom_text() - see some examples of its use at https://ggplot2.tidyverse.org/reference/geom_text.html#ref-examples. Try to make the names as easy to read as possible by avoiding overlap.
 7. In the answer space below, describe what you see and answer the questions posed above. In a general sense, what do you think this means? Feel free to consider the actual raw values: how would you report out the main point(s) of this chart?
 
-**A3.**  
+**A3.** After completing the scatter plot, I believe the overdose calls and the median income relates. The smaller median incomes in a zip code, have a large amount of overdose calls occurring. The higher up median income in a zip code, the least overdose calls that happen. I see in the median range of income, there are a lot of zip codes within in that have a high volume of overdose calls. 
 
 ```{r}
 pg_zipcode_calls <- pg_overdose_calls |>
@@ -145,8 +145,23 @@ md <- get_acs(geography = "zcta",
               variables = c(median_income = "B19013_001"),
               state = "MD",
               year = 2019)
+
+pg_with_income <- pg_zipcode_calls |> inner_join(md, by=c("zipcode" = "GEOID"))
 ```
 
 ```{r}
+ s <- pg_with_income |>
+  ggplot() + 
+  geom_point(aes(x=estimate, y=total_calls)) +
+  labs(
+    title="Comparing total 911 calls and median income in Maryland",
+    x = "Median Income",
+    y = "Total Calls",
+    caption = "source: Prince George's County EMS and US Census"
+  )
+s
+```
 
+```{r}
+s + geom_text(aes(x=estimate, y=total_calls, label=zipcode), size = 2.5, angle = 45, check_overlap = TRUE, hjust = -0.4, nudge_x = 0.99)
 ```
