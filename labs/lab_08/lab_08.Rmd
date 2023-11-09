@@ -45,7 +45,7 @@ pg_overdose_calls <- read_csv("data/prince_georges_2022_overdoses.csv") |>
 
 Compare the results here to those from the pre_lab_08 bar chart - are there major differences in the months with the highest and lowest figures? Describe that below.
 
-**A1.** Compared to the bar chart in the pre lab, there is a big difference since August is the month with the highest calls in the pre lab, but December has the highest calls in the lab. In the pre lab, August has the highest, but its the second to lowest in the lab. This is the same thing for December in the lab, its the lowest in the pre lab but the highest in the lab. I chose not to put the data in descending order, since I would want the audience to see how the percent changes as the year goes on. I think having it in the other order would be confusing for some people to read. 
+**A1.** Compared to the bar chart in the pre lab, there is a big difference since August is the month with the highest calls in the pre lab, but December has the highest calls in the lab. In the pre lab, August has the highest, but its the second to lowest in the lab. This is the same thing for December, its the lowest in the pre lab but the highest in the lab. I chose not to put the data in descending order, since I would want the audience to see how the percent changes as the year goes on. I think having it in the other order would be confusing for some people to read. 
 
 ```{r}
 pg_percent_calls <- pg_overdose_calls |>
@@ -79,7 +79,7 @@ pg_percent_calls |>
 
 Describe the pattern of results; you may want to look at the data to dig into particular outliers.
 
-**A2.** In the beginning of the year, the calls stayed around 30 and under. Once week 28 happened which is around the second week of July. The year ended with four overdose calls on week 53, which to me seems odd when on the other weeks, they have about 20+ calls. In the data, they counted week 53 with one day attached to it, but 2022 was a leap year so that might be to blame for the low number of calls. 
+**A2.** In the beginning of the year, the calls stayed around 30 and under. Once Week 28 rolled around, which is the second week of July we see a spike in calls. The year ended with four overdose calls on Week 53, which to me seems odd when on the other weeks, they have about 20+ calls. In the data, they counted week 53 with one day attached to it (Dec. 31), but 2022 was a leap year so that might be to blame for the low number of calls.
 
 ```{r}
 pg_week_calls <- pg_overdose_calls |>
@@ -96,7 +96,7 @@ pg_week_calls |>
   ggplot() +
   geom_line(aes(x=week, y=total_calls)) +
   labs(
-    title="Total number of calls per week in 2022",
+    title="Total number of overdose calls per week in 2022",
     x = "Week",
     y = "Total Calls",
     caption = "source: Prince George's County EMS"
@@ -124,7 +124,7 @@ To answer this question, do the following:
 6. Add a label for each point that shows the zip code using geom_text() - see some examples of its use at https://ggplot2.tidyverse.org/reference/geom_text.html#ref-examples. Try to make the names as easy to read as possible by avoiding overlap.
 7. In the answer space below, describe what you see and answer the questions posed above. In a general sense, what do you think this means? Feel free to consider the actual raw values: how would you report out the main point(s) of this chart?
 
-**A3.** After completing the scatter plot, I believe the overdose calls and the median income relates. The smaller median incomes in a zip code, have a large amount of overdose calls occurring. The higher up median income in a zip code, the least overdose calls that happen. I see in the median range of income, there are a lot of zip codes within in that have a high volume of overdose calls. 
+**A3.** After completing the scatterplot, I believe the overdose calls and the median income relate. The smaller median incomes in a zip code, have a large amount of overdose calls. The higher up median income in a zip code, have the least overdose calls. I noticed that in the median range of income, there are a lot of zip codes within in that have a variety of high and low overdose calls. Overall, the zip codes that have a high median income produce less overdose calls. 
 
 ```{r}
 pg_zipcode_calls <- pg_overdose_calls |>
@@ -154,7 +154,7 @@ pg_with_income <- pg_zipcode_calls |> inner_join(md, by=c("zipcode" = "GEOID"))
   ggplot() + 
   geom_point(aes(x=estimate, y=total_calls)) +
   labs(
-    title="Comparing total 911 calls and median income in Maryland",
+    title="Comparing total 911 overdose calls and median income in PG County",
     x = "Median Income",
     y = "Total Calls",
     caption = "source: Prince George's County EMS and US Census"
