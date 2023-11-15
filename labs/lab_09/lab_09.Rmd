@@ -37,7 +37,7 @@ md_county_18 <- read_csv("data/md_gov_county_18.csv")
 md_county_22 <- read_csv("data/md_gov_county.csv")
 
 md_county_18_22 <- md_county_18 |> inner_join(md_county_22, by=c("GEOID","County")) |>
-  rename(Write_ins_18 = 'Write-ins.x', Write_ins_22 = 'Write-ins.y') |>
+  rename(Write_ins_18 = `Write-ins.x`, Write_ins_22 = `Write-ins.y`) |>
   mutate(Total_Votes_18=(Hogan+Jealous+Quinn+Schlakman+Write_ins_18)) |>
   mutate(Total_Votes_22=(Cox+Moore+Lashar+Wallace+Sefcik+Write_ins_22)) |>
   mutate(Pct_Hogan_18=(Hogan/Total_Votes_18)*100) |>
@@ -55,6 +55,14 @@ What do you think the story here is? Put the answer below along with the URL of 
 **A2.**
 
 ```{r}
+md_vote <- read_csv("data/md_votes_by_type.csv")
+
+pct_md_vote <- md_vote |>
+  mutate(pct_early=(Early/Total)*100) |>
+  mutate(pct_election=(`Election Day`/Total)*100) |>
+  mutate(pct_mail=(Mail/Total)*100)
+
+write_csv(pct_md_vote, "data/pct_md_vote.csv")
 ```
 
 **Q3.** You want to know more about the geography of 911 overdose calls in Montgomery County, Maryland, in 2022. To do that, you'll make a choropleth map in Datawrapper. You will need to:
@@ -72,4 +80,5 @@ What do you think the story here is, and what would you want to know more about?
 **A3.**
 
 ```{r}
+montgomery_2022_overdose <- read_csv("data/montgomery_2022_overdoses.csv")
 ```
