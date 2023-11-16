@@ -22,6 +22,7 @@ knitr::opts_chunk$set(echo = TRUE)
 # load libraries here
 library(tidyverse)
 library(janitor)
+library(tidycensus)
 ```
 
 ## Questions
@@ -56,8 +57,7 @@ What do you think the story here is? Put the answer below along with the URL of 
 
 **A2.** https://www.datawrapper.de/_/YaAKr/
 
-
-I think the story revolves around election day voting and mail in voting switching over this four year span. I think once the pandemic occurred, mail in votes increased. But we can see that early voting stayed almost consistent over these three years.
+I think the story revolves around election day voting and mail in voting switching over this four year span. Once the pandemic occurred, mail in votes increased, but we can see that early voting stayed almost consistent over these four years. Also looking at why did early voting stay almost the same, was it due to the same party of people voting, same age range, or a specific counties that contributed to this number. 
 
 ```{r}
 md_vote <- read_csv("data/md_votes_by_type.csv")
@@ -82,7 +82,9 @@ write_csv(pct_md_vote, "data/pct_md_vote.csv")
 
 What do you think the story here is, and what would you want to know more about? Put the answer below along with the URL of your map.
 
-**A3.** 
+**A3.** https://www.datawrapper.de/_/643Nm/
+
+I think the story is about looking at why the zip codes with a low to medium range of median income have a higher number of overdose calls in 2022 and what resources are provided for the residents in this area that might experience an overdose. Also, looking at why the higher income zip codes don't experience a high volume of calls? What things are located in lower income zip codes that aren't in the higher income zip codes.
 
 ```{r}
 montgomery_2022_overdose <- read_csv("data/montgomery_2022_overdoses.csv") 
@@ -93,7 +95,17 @@ montgomery_overdose_count <- montgomery_2022_overdose |>
     total_calls=n()
   ) 
 
+md <- get_acs(geography = "zcta",
+              variables = c(median_income = "B19013_001"),
+              state = "MD",
+              year = 2019)
 
+montgomery_overdose_count <- montgomery_overdose_count |>  mutate(zip = as.character(zip))
 
-write_csv(montgomery_overdose_count, "data/montgomery_overdose_count.csv")
+moco_with_md_income <- montgomery_overdose_count |> inner_join (md, by=c("zip" = "GEOID"))
+
+moco_with_md_income |>
+  arrange(desc(estimate))
+  
+write_csv(moco_with_md_income, "data/moco_with_md_income.csv")
 ```
