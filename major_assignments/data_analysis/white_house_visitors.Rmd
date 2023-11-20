@@ -15,18 +15,26 @@ library(janitor)
 ```
 
 ```{r}
-jan_visitors <- read_csv("data/January_vistors.csv")
-feb_visitors <- read_csv("data/February_visitors.csv")
-mar_visitors <- read_csv("data/March_visitors.csv")
-apr_visitors <- read_csv("data/April_visitors.csv")
-may_visitors <- read_csv("data/May_visitors.csv")
-jun_visitors <- read_csv("data/June_visitors.csv")
-jul_visitors <- read_csv("data/July_visitors.csv")
-aug_visitors <- read_csv("data/August_visitors.csv")
-sep_visitors <- read_csv("data/September_visitors.csv")
-oct_visitors <- read_csv("data/October_visitors.csv")
-nov_visitors <- read_csv("data/November_visitors.csv")
-dec_visitors <- read_csv("data/December_visitors.csv")
+jan_22_visitors <- read_csv("data/January_vistors.csv") |> clean_names()
+feb_22_visitors <- read_csv("data/February_visitors.csv") |> clean_names()
+mar_22_visitors <- read_csv("data/March_visitors.csv") |> clean_names()
+apr_22_visitors <- read_csv("data/April_visitors.csv") |> clean_names()
+may_22_visitors <- read_csv("data/May_visitors.csv") |> clean_names()
+jun_22_visitors <- read_csv("data/June_visitors.csv")|> clean_names()
+jul_22_visitors <- read_csv("data/July_visitors.csv") |> clean_names()
+aug_22_visitors <- read_csv("data/August_visitors.csv") |> clean_names()
+sep_22_visitors <- read_csv("data/September_visitors.csv") |> clean_names()
+oct_22_visitors <- read_csv("data/October_visitors.csv") |> clean_names()
+nov_22_visitors <- read_csv("data/November_visitors.csv") |> clean_names()
+dec_22_visitors <- read_csv("data/December_visitors.csv") |> clean_names()
+jan_23_visitors <- read_csv("data/jan_visitors_23.csv") |> clean_names()
+feb_23_visiors <- read_csv("data/feb_visitors_23.csv") |> clean_names()
+mar_23_visitors <- read_csv("data/mar_visitors_23.csv") |> clean_names()
+apr_23_visitors <- read_csv("data/apr_visitors_23.csv") |> clean_names()
+may_23_visitors <- read_csv("data/may_visitors_23.csv") |> clean_names()
+jun_23_visitors <- read_csv("data/june_visitors_23.csv") |> clean_names()
+jul_23_visitors <- read_csv("data/july_visitors_23.csv") |> clean_names()
+
 ```
 
 ```{r}
