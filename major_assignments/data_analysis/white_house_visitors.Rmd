@@ -1,0 +1,34 @@
+---
+title: "lab_09.Rmd"
+author: "Shaela, Robert, Bridget, Sydney"
+date: "2023-11-15"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(janitor)
+```
+
+```{r}
+jan_visitors <- read_csv("data/January_vistors.csv")
+feb_visitors <- read_csv("data/February_visitors.csv")
+mar_visitors <- read_csv("data/March_visitors.csv")
+apr_visitors <- read_csv("data/April_visitors.csv")
+may_visitors <- read_csv("data/May_visitors.csv")
+jun_visitors <- read_csv("data/June_visitors.csv")
+jul_visitors <- read_csv("data/July_visitors.csv")
+aug_visitors <- read_csv("data/August_visitors.csv")
+sep_visitors <- read_csv("data/September_visitors.csv")
+oct_visitors <- read_csv("data/October_visitors.csv")
+nov_visitors <- read_csv("data/November_visitors.csv")
+dec_visitors <- read_csv("data/December_visitors.csv")
+```
+
+```{r}
+
+```
