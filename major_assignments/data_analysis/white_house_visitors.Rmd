@@ -12,8 +12,10 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r}
 library(tidyverse)
 library(janitor)
+library(lubridate)
 ```
 
+Loading all the data
 ```{r}
 jan_22_visitors <- read_csv("data/January_vistors.csv") |> clean_names()
 feb_22_visitors <- read_csv("data/February_visitors.csv") |> clean_names()
@@ -37,6 +39,7 @@ jul_23_visitors <- read_csv("data/july_visitors_23.csv") |> clean_names()
 
 ```
 
+We found out there are inconsistencies within the headers, so we're ensuring they all match. Before this, we cleaned the column names making them all lower case. 
 ```{r}
 
 ```
