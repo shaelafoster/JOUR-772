@@ -95,7 +95,11 @@ md_counties |>
   theme_minimal() + scale_fill_viridis_b(trans = "log")
 ```
 
-**Q3.** You've been assigned a story about the use of electric vehicles in Maryland and you want to make a map of the prevalence of electric vehicles in each county. Load the `ev_2020_2023.csv` file, which has the number of electric and hybrid vehicles per county from July 2020 and March 2023 and calculate a percentage change for each county (remember, that's `new-old/old`). Using the Maryland counties dataframe you made for Q1, make a county map showing the percentage change. What counties stand out to you? What questions do you have about the changes you're seeing?
+**Q3.** You've been assigned a story about the use of electric vehicles in Maryland and you want to make a map of the prevalence of electric vehicles in each county. Load the `ev_2020_2023.csv` file, which has the number of electric and hybrid vehicles per county from July 2020 and March 2023 and 
+
+1. calculate a percentage change for each county (remember, that's `new-old/old`). 
+2. Using the Maryland counties dataframe you made for Q1, make a county map showing the percentage change. 
+3. What counties stand out to you? What questions do you have about the changes you're seeing?
 
 Next, use tidycensus to retrieve county population data for Maryland from 2021 (you did this in the pre_lab) and join it to your vehicles dataframe. HINT: you may not need to join it on the county name, and you should already have the geometry!
 
@@ -103,11 +107,37 @@ Then, calculate a per capita rate of electric & hybrid vehicles using the March 
 
 Finally, make a second county map showing the per capita rate. What counties stand out on this map? How is it different from the first one you made?
 
-**A3.**
+**A3.** The county that stands out to me would be Caroline county since it's the only one that has a prominent percent change compared to the other counties that only have a 1-2% change. The questions I have surrounding the changes is if the pandemic had any sort of impact on the amount of electric and hybrid vehicles people wanted to purchase. Also, why are electric and hybrid vehicles so popular in Baltimore city? Do they have more access to charging stations? Another questions could revolve around the accessibility of charging stations in each county and to see if that had an impact on the number of electric and hybrid vehicles being purchased by residents. 
+
+
+The counties that stand out on the map are Howard, Montgomery and Anne Arundel County. It's completely different from the previous map because these counties ranked in the lower end of percent change from 2020 to 2023. I chose the per captia value of 1,000 to see how many ev and hyrbid vehicles there were per 1,000 people. This makes me wonder if the reason there is a higher per capita in these counties is because of home ownership and residents being able to charge their vehicles at home and not always rely on outside charging stations?
+
 
 ```{r}
-#ev_2020_2023 <- read_csv("data/ev_2020_2023.csv")
+ev_2020_2023 <- read_csv("data/ev_2020_2023.csv")
 
 pct_change_ev <- ev_2020_2023 |>
   mutate(pct_change=(march_2023-july_2020)/july_2020)
+
+pct_change_ev <- cleaned_md_counties |> inner_join (pct_change_ev, by=c("NAMELSAD" = "county"))
+
+cleaned_md_counties |>
+  ggplot() +
+  geom_sf(data=pct_change_ev, aes(fill=pct_change)) +
+  theme_minimal()
+
+md_county_population <- get_acs(geography = "county",
+              variables = c(population = "B01001_001"),
+              year = 2021,
+              state = "MD")
+
+population_pct_change_ev <- pct_change_ev |> inner_join (md_county_population, by=c("GEOID")) |>
+  rename(Name_alone = NAME.x, Name_state = NAME.y)
+
+per_capita_rate <- population_pct_change_ev |>
+  mutate(per_capita_rate=(march_2023/estimate)*1000)
+
+cleaned_md_counties |>
+  ggplot() +
+  geom_sf(data=per_capita_rate, aes(fill=per_capita_rate))
 ```
