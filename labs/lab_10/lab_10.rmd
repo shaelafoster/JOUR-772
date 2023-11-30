@@ -37,7 +37,7 @@ Let's explore Maryland elections, power outages and electric vehicle data and ma
 
 Get the geometry for Maryland's counties using tigris and, joining that dataframe to your results dataframe, make a county-level map of the differences between Moore and Brown's percentages. What is the story here, and what is the county with the most interesting results?
 
-**A1.** I believe the story could be surrounding Maryland residents are becoming more confident or somewhat comfortable with having Black people represent them in large positions like governor or attorney general. It could also look at how Maryland has shifted from a predominately white leadership to now electing Black officials and how residents see this helping the development of the state. The county that had the most interesting results was Garrett County mainly because that area seems more rural. I wouldn't have expected both Moore or Brown to receive a lot of votes coming from that area. There was about a 4% difference between Moore and Brown with Moore being favored over Brown in their respective races.
+**A1.** I believe the story could be surrounded by how Maryland residents are becoming more confident or somewhat comfortable with having Black people represent them in major positions. Also, looking at how Maryland has shifted from a predominately white leadership to now electing Black officials and how residents see this helping the development of the state. The county that had the most interesting results was Garrett County mainly because that area seems more rural. I wouldn't have expected neither Moore or Brown to receive a lot of votes coming from that area, but there was only about a 4% difference between the two with Moore being more favorable.
 
 ```{r}
 md_statewide_county <- read_csv("data/md_statewide_county.csv")
@@ -74,7 +74,7 @@ md_counties |>
 
 What's the potential story here? Given access to other months' outage data, what would your next steps be in reporting a story?
 
-**A2.** A potential story could be looking at why March sparked so many power outages in Talbot County. Was it because of trees? Buildings collapsing? Cars crashing into electricity poles? Or the electricity poles being old and worn out. If we have the other months we could see if Talbot County usually has a lot of power outages throughout the year. Also, looking at which county produces the least amount of power outages throughout the year to see why it is and the resources they have in place to ensure residents don't experience it often.
+**A2.** A potential story could be looking at why March sparked so many power outages in Talbot County. Was it because of trees? Buildings collapsing? Cars crashing into electricity poles? Or the electricity poles being old and worn out? If we have the other months we could see if Talbot County usually has a lot of power outages throughout the year or if it was a once in a blue moon kind of thing. Also, looking at which county produces the least amount of power outages throughout the year to see why it is and the resources they have in place to ensure residents don't experience it often.
 
 ```{r}
 county_outages <- read_csv("data/county_outages_march2023.csv")
@@ -107,10 +107,10 @@ Then, calculate a per capita rate of electric & hybrid vehicles using the March 
 
 Finally, make a second county map showing the per capita rate. What counties stand out on this map? How is it different from the first one you made?
 
-**A3.** The county that stands out to me would be Caroline county since it's the only one that has a prominent percent change compared to the other counties that only have a 1-2% change. The questions I have surrounding the changes is if the pandemic had any sort of impact on the amount of electric and hybrid vehicles people wanted to purchase. Also, why are electric and hybrid vehicles so popular in Baltimore city? Do they have more access to charging stations? Another questions could revolve around the accessibility of charging stations in each county and to see if that had an impact on the number of electric and hybrid vehicles being purchased by residents. 
+**A3.** The county that stands out to me would be Caroline county since it's the only one that has a prominent percent change compared to other counties that only have a 1-2% change. The questions I have surrounding the changes is if the pandemic had any sort of impact on the amount of electric and hybrid vehicles people wanted to purchase? Also, why are electric and hybrid vehicles so popular in Baltimore city? Do they have more access to charging stations? Another questions could revolve around the accessibility of charging stations in each county and to see if that influenced the purchases on these vehicles.
 
 
-The counties that stand out on the map are Howard, Montgomery and Anne Arundel County. It's completely different from the previous map because these counties ranked in the lower end of percent change from 2020 to 2023. I chose the per captia value of 1,000 to see how many ev and hyrbid vehicles there were per 1,000 people. This makes me wonder if the reason there is a higher per capita in these counties is because of home ownership and residents being able to charge their vehicles at home and not always rely on outside charging stations?
+The counties that stand out on the map are Howard, Montgomery and Anne Arundel County. It's completely different from the previous map because these counties ranked in the lower end of percent change from 2020 to 2023. I chose the per captia value of 1,000 to see how many ev and hyrbid vehicles there were per 1,000 people. This makes me wonder if the reason there is a higher per capita in these counties is because of home ownership with residents being able to charge their vehicles at home and not always rely on outside charging stations?
 
 
 ```{r}
