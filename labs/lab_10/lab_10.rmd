@@ -37,10 +37,10 @@ Let's explore Maryland elections, power outages and electric vehicle data and ma
 
 Get the geometry for Maryland's counties using tigris and, joining that dataframe to your results dataframe, make a county-level map of the differences between Moore and Brown's percentages. What is the story here, and what is the county with the most interesting results?
 
-**A1.**
+**A1.** I believe the story could be surrounding Maryland residents are becoming more confident or somewhat comfortable with having Black people represent them in large positions like governor or attorney general. It could also look at how Maryland has shifted from a predominately white leadership to now electing Black officials and how residents see this helping the development of the state. The county that had the most interesting results was Garrett County mainly because that area seems more rural. I wouldn't have expected both Moore or Brown to receive a lot of votes coming from that area. There was about a 4% difference between Moore and Brown with Moore being favored over Brown in their respective races.
 
 ```{r}
-#md_statewide_county <- read_csv("data/md_statewide_county.csv")
+md_statewide_county <- read_csv("data/md_statewide_county.csv")
 
 total_md_statewide <- md_statewide_county |>
   mutate(total_gov_votes=(Cox+Moore+Lashar+Wallace+Harding+Sefcik+GovWritein)) |>
@@ -55,9 +55,9 @@ counties <- counties()
 md_counties <- counties |>
   filter(STATEFP == "24")
 
-total_with_counties <- md_counties |> inner_join (total_md_statewide, by=c("GEOID"))
-
 total_md_statewide <- total_md_statewide |>  mutate(GEOID = as.character(GEOID))
+
+total_with_counties <- md_counties |> inner_join (total_md_statewide, by=c("GEOID"))
 
 md_counties |>
   ggplot() +
@@ -74,10 +74,10 @@ md_counties |>
 
 What's the potential story here? Given access to other months' outage data, what would your next steps be in reporting a story?
 
-**A2.**
+**A2.** A potential story could be looking at why March sparked so many power outages in Talbot County. Was it because of trees? Buildings collapsing? Cars crashing into electricity poles? Or the electricity poles being old and worn out. If we have the other months we could see if Talbot County usually has a lot of power outages throughout the year. Also, looking at which county produces the least amount of power outages throughout the year to see why it is and the resources they have in place to ensure residents don't experience it often.
 
 ```{r}
-#county_outages <- read_csv("data/county_outages_march2023.csv")
+county_outages <- read_csv("data/county_outages_march2023.csv")
 
 rate_county_outages <- county_outages |>
   mutate(rate_county_outages=(outage_customers/total_customers)*10000)
@@ -92,7 +92,7 @@ rate_md_counties <- cleaned_md_counties |> inner_join (rate_county_outages, by=c
 md_counties |>
   ggplot() +
   geom_sf(data=rate_md_counties, aes(fill=rate_county_outages)) +
-  theme_minimal() + scale_fill_viridis_b(option="magma",trans = "log")
+  theme_minimal() + scale_fill_viridis_b(trans = "log")
 ```
 
 **Q3.** You've been assigned a story about the use of electric vehicles in Maryland and you want to make a map of the prevalence of electric vehicles in each county. Load the `ev_2020_2023.csv` file, which has the number of electric and hybrid vehicles per county from July 2020 and March 2023 and calculate a percentage change for each county (remember, that's `new-old/old`). Using the Maryland counties dataframe you made for Q1, make a county map showing the percentage change. What counties stand out to you? What questions do you have about the changes you're seeing?
