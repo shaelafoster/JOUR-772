@@ -30,7 +30,7 @@ oct_22_visitors <- read_csv("data/October_visitors.csv") |> clean_names()
 nov_22_visitors <- read_csv("data/November_visitors.csv") |> clean_names()
 dec_22_visitors <- read_csv("data/December_visitors.csv") |> clean_names()
 jan_23_visitors <- read_csv("data/jan_visitors_23.csv") |> clean_names()
-feb_23_visiors <- read_csv("data/feb_visitors_23.csv") |> clean_names()
+feb_23_visitors <- read_csv("data/feb_visitors_23.csv") |> clean_names()
 mar_23_visitors <- read_csv("data/mar_visitors_23.csv") |> clean_names()
 apr_23_visitors <- read_csv("data/apr_visitors_23.csv") |> clean_names()
 may_23_visitors <- read_csv("data/may_visitors_23.csv") |> clean_names()
@@ -39,7 +39,46 @@ jul_23_visitors <- read_csv("data/july_visitors_23.csv") |> clean_names()
 
 ```
 
-We found out there are inconsistencies within the headers, so we're ensuring they all match. Before this, we cleaned the column names making them all lower case. 
-```{r}
+We found out three groups of inconsistencies in the header. So we're cleaning up the outliers.
 
+#cleaning records part 1
+```{r}
+c_jan_22_visitors <- jan_22_visitors |> rename(first_name = namefirst, last_name = namelast, middle_initial = namemid, appointment_made_date = appt_made_date, appointment_start_date = appt_start_date, appointment_end_date = appt_end_date, appointment_cancel_date = appt_cancel_date, last_updated_by = last_updatedby, last_entry_date = lastentrydate,  visitee_last_name = visitee_namelast, visitee_first_name = visitee_namefirst, meeting_location = meeting_loc, caller_last_name = caller_name_last,  caller_first_name = caller_name_first, release_date = releasedate)
+```
+
+```{r}
+c_feb_22_visitors <- feb_22_visitors |> rename(first_name = namefirst, last_name = namelast, middle_initial = namemid, appointment_made_date = appt_made_date, appointment_start_date = appt_start_date, appointment_end_date = appt_end_date, appointment_cancel_date = appt_cancel_date, last_updated_by = last_updatedby, last_entry_date = lastentrydate,  visitee_last_name = visitee_namelast, visitee_first_name = visitee_namefirst, meeting_location = meeting_loc, caller_last_name = caller_name_last,  caller_first_name = caller_name_first, release_date = releasedate)
+```
+
+```{r}
+c_mar_22_visitors <- mar_22_visitors |> rename(first_name = namefirst, last_name = namelast, middle_initial = namemid, appointment_made_date = appt_made_date, appointment_start_date = appt_start_date, appointment_end_date = appt_end_date, appointment_cancel_date = appt_cancel_date, last_updated_by = last_updatedby, last_entry_date = lastentrydate,  visitee_last_name = visitee_namelast, visitee_first_name = visitee_namefirst, meeting_location = meeting_loc, caller_last_name = caller_name_last,  caller_first_name = caller_name_first, release_date = releasedate)
+```
+
+```{r}
+c_apr_22_visitors <- apr_22_visitors |> rename(first_name = namefirst, last_name = namelast, middle_initial = namemid, appointment_made_date = appt_made_date, appointment_start_date = appt_start_date, appointment_end_date = appt_end_date, appointment_cancel_date = appt_cancel_date, last_updated_by = last_updatedby, last_entry_date = lastentrydate,  visitee_last_name = visitee_namelast, visitee_first_name = visitee_namefirst, meeting_location = meeting_loc, caller_last_name = caller_name_last,  caller_first_name = caller_name_first, release_date = releasedate)
+```
+
+```{r}
+c_may_22_visitors <- may_22_visitors |> rename(first_name = namefirst, last_name = namelast, middle_initial = namemid, appointment_made_date = appt_made_date, appointment_start_date = appt_start_date, appointment_end_date = appt_end_date, appointment_cancel_date = appt_cancel_date, last_updated_by = last_updatedby, last_entry_date = lastentrydate,  visitee_last_name = visitee_namelast, visitee_first_name = visitee_namefirst, meeting_location = meeting_loc, caller_last_name = caller_name_last,  caller_first_name = caller_name_first, release_date = releasedate)
+```
+
+#cleaning records, part 2
+```{r}
+c_jun_22_visitors<- jun_22_visitors |> rename(release_date = releasedate)
+
+c_jul_22_visitors <-jul_22_visitors |> rename(release_date = releasedate)
+
+c_aug_22_visitors <-aug_22_visitors|> rename(release_date = releasedate)
+
+c_sep_22_visitors <-sep_22_visitors|> rename(release_date = releasedate)
+
+c_oct_22_visitors <-oct_22_visitors |> rename(release_date = releasedate)
+
+c_nov_22_visitors <-nov_22_visitors |> rename(release_date = releasedate)
+
+c_dec_22_visitors <-dec_22_visitors |> rename(release_date = releasedate)
+
+c_jan_23_visitors <-jan_23_visitors |> rename(release_date = releasedate)
+
+c_feb_23_visitors <-feb_23_visitors |> rename(release_date =releasedate)
 ```
