@@ -1,0 +1,74 @@
+---
+title: "grad_student_assignment"
+author: "Shaela Foster"
+date: "2023-12-04"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+library(tidyverse)
+library(janitor)
+library(tidycensus)
+```
+
+
+(1) Below I've loaded the data. I did a quick browse through the data and noticed the column headers were just too large so I cleaned them up. The information within this data set was collected by the Governor's Office of Crime Prevention, Youth and Victim Services. It is updated by the Department of Information Technology. There are 1,104 rows with 38 coloumns. Each row represents data from every county from years 1975-2020. It shows the population of the county during that year, the different forms of crimes like larceny, break and entering. They have a violent crime total column and also a violent crime percent column which calculates how much of the total crimes were violent crimes. I also noticed there are a some columns of information that have N/A. They have the percent change columns but I'm not sure how they came to that conclusion. Are they using the the earlier year (ex. 1975) against the next year (1976) then calculating a total? I'll probably go through and calculate some things on my own to see if I can replicate their math. 
+```{r}
+violent_property_crime <- read_csv("data/violent_crime_property_crime_by_county_1975_to_present.csv") |> clean_names()
+```
+
+(2) Now I want to do some basic totals just to see what year and county had the most crimes by looking at the grand total column.
+```{r}
+totals <- violent_property_crime |>
+  group_by(jurisdiction, year) |>
+  arrange(desc(grand_total)) |>
+  select(jurisdiction, year, grand_total)
+```
+(3) After calculating to see which year and county, Baltimore City in 1995 had the highest total of crimes both violent and property with 96,243. The least amount was Kent County with 210 in 2020. The first result wasn't surprising since Baltimore City is known for having a high total of crimes in Maryland. The first 27 results come from Baltimore City with PG County right behind them. That was a bit of a shock to see since I didn't expect there to be multiple years that ranked in the high end.
+
+
+(4) Although the data frame includes information about population I still want to gather income data for each county to see if there is a connection with average income and violent and property crimes. 
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
