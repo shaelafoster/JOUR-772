@@ -31,9 +31,26 @@ totals <- violent_property_crime |>
 ```
 (3) After calculating to see which year and county, Baltimore City in 1995 had the highest total of crimes both violent and property with 96,243. The least amount was Kent County with 210 in 2020. The first result wasn't surprising since Baltimore City is known for having a high total of crimes in Maryland. The first 27 results come from Baltimore City with PG County right behind them. That was a bit of a shock to see since I didn't expect there to be multiple years that ranked in the high end.
 
-
-(4) Although the data frame includes information about population I still want to gather income data for each county to see if there is a connection with average income and violent and property crimes. 
+md <- get_acs(geography = "county",
+              variables = c(median_age = "B01002_001"),
+              state = "MD",
+              year = 2021)
+              
+zipcode_acs <- get_acs(geography = "zcta",
+              variables = c(over_18 = "B09021_001"),
+              state = "MD",
+              year = 2019)
+              
+(4) Although the data frame includes information about population I still want to gather income data for each county to see if there is a connection with average income and violent and property crimes. I'm going to gather income data from 2019 and compare it to the violent and property crime from 2019 to see if there is any correlation. 
 ```{r}
+data_2019 <- violent_property_crime |>
+  filter(year == "2019")
+
+md <- get_acs(geography = "zcta",
+              variables = c(median_income = "B19013_001"),
+              state = "MD",
+              year = 2019)
+
 
 ```
 
