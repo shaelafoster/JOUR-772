@@ -138,3 +138,18 @@ wh_records_combined_names |>
 wh_records_combined_names
 ```
 
+Question 2: Who gets the most visitors?
+Answer:
+```{r}
+
+```
+
+Question 3: How frequently does the president get visitors?
+```{r}
+```
+
+Question 4: What time of the day is the busiest for visitors? What day of the week? Which week of the year? (2022 = complete year
+```{r}
+```
+
+Question 5: How frequently does House or Senate leadership visit the White 
