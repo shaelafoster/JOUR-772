@@ -138,18 +138,64 @@ wh_records_combined_names |>
 wh_records_combined_names
 ```
 
+## Need to use Open Refine to clean up all these names ##
 Question 2: Who gets the most visitors?
-Answer:
+Answer: Ed Teleky (Director of Ceremonies at the White House), Gionelly Mills (Staff Assistant focusing on Communications, Celebrity Engagement and Events at the WH), Lydia Hecmanczuk (IT Specialist in the Executive Office of the President)
 ```{r}
-
+wh_records_combined_names |>
+  group_by(full_name_visitee) |>
+  summarise(count_visitee=n()) |>
+  arrange(desc(count_visitee))
 ```
 
 Question 3: How frequently does the president get visitors?
+Answer: Roughly 8.9% of visitors at the WH say they are visiting just the president.
 ```{r}
+wh_records_refined|>
+  summarise(total_visits =n())
+
+#POTUS visits(71777)/Total Number of Visits(805,945)
+(71777/805945)*100
 ```
 
-Question 4: What time of the day is the busiest for visitors? What day of the week? Which week of the year? (2022 = complete year
+Question 4: What time of the day is the busiest for visitors? What day of the week? Which week of the year? (2022 = complete year)
+Answer: 10 a.m. received the most number os visits. July was the month with the most visits. Week 26 was the week with the greatest amount of visits. Saturday was the day of the week with the most number of visits. 
 ```{r}
+#adding a column for month, day of the week, week in the year, and hour in the day
+wh_records_combined_dates_and_names_wo_extra_mutated <- wh_records_combined_dates_and_names_wo_extra |>
+  mutate (hour = hour(toa_cln)) |>
+  mutate (month = month(toa_cln)) |>
+  mutate (weekdays = weekdays(toa_cln)) |>
+  mutate (week = week(toa_cln))
+
+#most common hour- 10 A.M.
+wh_records_combined_dates_and_names_wo_extra_mutated |>
+  group_by(hour) |>
+  summarise(count_visits = n())|>
+  arrange(desc(count_visits))
+#most common month- July 
+wh_records_combined_dates_and_names_wo_extra_mutated |>
+  group_by(month) |>
+  summarise(count_visits = n())|>
+  arrange(desc(count_visits))
+#most common week- week 24 (mid June)
+wh_records_combined_dates_and_names_wo_extra_mutated |>
+  group_by(week) |>
+  summarise(count_visits = n())|>
+  arrange(desc(count_visits))
+#most common weekday- Saturday
+wh_records_combined_dates_and_names_wo_extra_mutated |>
+  group_by(weekdays) |>
+  summarise(count_visits = n())|>
+  arrange(desc(count_visits))
 ```
 
-Question 5: How frequently does House or Senate leadership visit the White 
+Question 5: How frequently does House or Senate leadership visit the White House?
+
+```{r}
+wh_records_last_names <- wh_records_combined_dates_and_names |>
+wh_records_leadership <- wh_records_names|>
+  filter(full_names_visitor %in% c("PATTY_L_MURRAY","RICHARD_J_DURBIN","CHARLES_N_SCHUMER","ELIZABETH_N_WARREN","MARK_R_WARNER","ADDISON_M_MCCONNELL","JOHN_R_THUNE","KATHERINE_C_PHILLIPSBARRASSO","SHELLEY_M_CAPITO", "STEVE_J_SCALISE","HAKEEM_N_JEFFRIES","KATHERINE_M_CLARK","PETER_R_AGUILAR", "JAMES_E_CLYBURN","JAMES_M_JOHNSON","EMMER","STEFANIK", "PALMER"))
+
+
+```
