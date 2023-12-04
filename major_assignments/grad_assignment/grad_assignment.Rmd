@@ -14,10 +14,13 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(janitor)
 library(tidycensus)
+library(ggthemes)
 ```
 
 
-(1) Below I've loaded the data. I did a quick browse through the data and noticed the column headers were just too large so I cleaned them up. The information within this data set was collected by the Governor's Office of Crime Prevention, Youth and Victim Services. It is updated by the Department of Information Technology. There are 1,104 rows with 38 coloumns. Each row represents data from every county from years 1975-2020. It shows the population of the county during that year, the different forms of crimes like larceny, break and entering. They have a violent crime total column and also a violent crime percent column which calculates how much of the total crimes were violent crimes. I also noticed there are a some columns of information that have N/A. They have the percent change columns but I'm not sure how they came to that conclusion. Are they using the the earlier year (ex. 1975) against the next year (1976) then calculating a total? I'll probably go through and calculate some things on my own to see if I can replicate their math. 
+(1) Below I've loaded the data. I did a quick browse through and noticed the column headers were just too large so I cleaned them up. The information within this data set was collected by the Governor's Office of Crime Prevention, Youth and Victim Services. It is updated by the Department of Information Technology. There are 1,104 rows with 38 columns. Each row represents data from every county from years 1975-2020. It shows the population of the county during that year, the different forms of crimes like larceny, break and entering, aggravated assault, etc. They have a violent crime total column, grand total column and a violent crime percent column which calculates how much of the total crimes were violent crimes. I also noticed there are some columns of information that have N/A. They have the percent change column but I'm not sure how they came to that conclusion. Are they using the earlier year (ex. 1975) against the next year (1976) then calculating the change? I'll probably go through and calculate some things on my own to see if I can replicate their math. 
+
+For the coloumns where they conduct the percent change, it is confusing to know which numbers they used to gather their answers. There is no guideline or explanation on the website I collected the data for, so it's very hard to trust the percentages without knowing their process or reasoning behind calculating them.
 ```{r}
 violent_property_crime <- read_csv("data/violent_crime_property_crime_by_county_1975_to_present.csv") |> clean_names()
 ```
@@ -29,7 +32,7 @@ totals <- violent_property_crime |>
   arrange(desc(grand_total)) |>
   select(jurisdiction, year, grand_total)
 ```
-(3) After calculating to see which year and county, Baltimore City in 1995 had the highest total of crimes both violent and property with 96,243. The least amount was Kent County with 210 in 2020. The first result wasn't surprising since Baltimore City is known for having a high total of crimes in Maryland. The first 27 results come from Baltimore City with PG County right behind them. That was a bit of a shock to see since I didn't expect there to be multiple years that ranked in the high end.
+(3) After calculating to see which year and county, Baltimore City in 1995 had the highest total of crimes both violent and property with 96,243. The least amount was Kent County with 152 in 2020. The first result wasn't surprising since Baltimore City is known for having a high total of crimes in Maryland. The first 27 results come from Baltimore City with PG County right behind them. That was a bit of a shocksince I didn't expect there to be multiple years that ranked in the high end. The Kent County results in 2020 being at the bottom also didn't surprise me since I knew during the lockdown period, crime was cut drastically in half.
 
 md <- get_acs(geography = "county",
               variables = c(median_age = "B01002_001"),
@@ -41,23 +44,52 @@ zipcode_acs <- get_acs(geography = "zcta",
               state = "MD",
               year = 2019)
               
-(4) Although the data frame includes information about population I still want to gather income data for each county to see if there is a connection with average income and violent and property crimes. I'm going to gather income data from 2019 and compare it to the violent and property crime from 2019 to see if there is any correlation. 
+(4) Although the data frame includes information about population I want to gather income data for each county to see if there is a connection with each counties average income and crimes. I'm going to gather income data from 2019 and compare it to the violent and property crime from 2019 to see if there is any correlation. The reason I chose use 2019 data since in the crime data set there is no data for 2021, which is another year we can collect income data for. 2019 is also the last full year of crime statistics before the pandemic started.
 ```{r}
 data_2019 <- violent_property_crime |>
   filter(year == "2019")
 
-md <- get_acs(geography = "zcta",
+md <- get_acs(geography = "county",
               variables = c(median_income = "B19013_001"),
               state = "MD",
               year = 2019)
 
+corrected_md <- md |>
+  rename(county = NAME) |>
+  mutate(county = str_to_title(str_remove_all(county,", Maryland")))
+
+md_with_2019_data <- corrected_md |> inner_join(data_2019, join_by("county" == "jurisdiction"))
+
+md_with_2019_data |>
+  group_by(county) |>
+  arrange(desc(grand_total))
+#Initial grouping and arranging let's me know Baltimore City had the most reported crimes in 2019 with 37,219. Kent County is still at the bottom of the rankings. This makes me wonder why there aren't a lot of violent or property crimes that occur there. Is it because there population is small or that they have laws in place that make it very hard for people to commit crimes? They totaled no murders in 2019, how are they able to come out of the year clean like that? These results also let me know that the top 3 counties with the highest total crimes in 2019 had an estimated median income of under $100,000. What correlation is there between income and crime? Does this mean that counties with average median incomes produce more crimes? Also, does the population have anything to do with it? Montgomery County had 1 million people living there in 2019, yet they still found themselves in the Top 10. 
+
+write_csv(md_with_2019_data, "data/census_crime_data_2019.csv")
 
 ```
 
+(5) After combining the median income data from 2019 to the crime data in 2019, I decided to create a map that depicts the connection between the total crime and median income of each county. Below I have linked to a map I created on Datawrapper.
+
+Link: (review map again and put into this spot)
+
+(6) Something I really wanted to explore was to see if crime in Baltimore City had always been high. I'm going to single out the data for Baltimore City in a separate data frame so I can take a deeper look at it. Upon first glance, I noticed that the population in the city has fluctuated since 1975. In 2020, they had the lowest population with 588,594 residents. 
+
+Question: Does the decrease in population affect the rate of crime? Did specific crimes (violent or property) go up? Which ones decreased with the population? 
+
+Answer: Although 2020 counted for the least number of people living in Baltimore City, the percentage of violent crime went up almost four percentage points. 
 ```{r}
+baltimore <- violent_property_crime |>
+  filter(jurisdiction == "Baltimore City")
 
+#baltimore <- baltimore |>
+  #mutate(population_change=())
+
+#How do you find the percentage of things that are in the same column?#
 ```
 
+
+(7)
 ```{r}
 
 ```
