@@ -32,7 +32,7 @@ totals <- violent_property_crime |>
   arrange(desc(grand_total)) |>
   select(jurisdiction, year, grand_total)
 ```
-(3) After calculating to see which year and county, Baltimore City in 1995 had the highest total of crimes both violent and property with 96,243. The least amount was Kent County with 152 in 2020. The first result wasn't surprising since Baltimore City is known for having a high total of crimes in Maryland. The first 27 results come from Baltimore City with PG County right behind them. That was a bit of a shocksince I didn't expect there to be multiple years that ranked in the high end. The Kent County results in 2020 being at the bottom also didn't surprise me since I knew during the lockdown period, crime was cut drastically in half.
+(3) After calculating to see which year and county, Baltimore City in 1995 had the highest total of crimes both violent and property with 96,243. The least amount was Kent County with 152 in 2020. The first result wasn't surprising since Baltimore City is known for having a high total of crimes in Maryland. The first 27 results come from Baltimore City with PG County right behind them. That was a bit of a shock since I didn't expect there to be multiple years that ranked in the high end. The Kent County results in 2020 being at the bottom also didn't surprise me since I knew during the lockdown period, crime was cut drastically in half.
 
 md <- get_acs(geography = "county",
               variables = c(median_age = "B01002_001"),
@@ -87,17 +87,20 @@ baltimore <- violent_property_crime |>
 
 #How do you find the percentage of things that are in the same column?#
 ```
-
-
-(7)
-```{r}
-
-```
+ 
+(7) Maybe create a chart comparing the violent crime percentages in Baltimore City to see which year ranked the highest)
 
 ```{r}
 
 ```
 
+(8) Combine over_18 population data with the information to see the counties with a low population of over 18 population and see if there is any correlation with violent crime and the low rate of over 18 population. 
+```{r}
+
+```
+
+
+(9)
 ```{r}
 
 ```
