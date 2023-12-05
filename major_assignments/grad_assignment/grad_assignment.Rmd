@@ -17,35 +17,40 @@ library(tidycensus)
 library(ggthemes)
 ```
 
-----------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------
 (1) Loading Data
+
 ```{r}
 violent_property_crime <- read_csv("data/violent_crime_property_crime_by_county_1975_to_present.csv") |> clean_names()
 ```
-- Upon completing an initial running of the data and quick browse, I noticed the column headers were large. I cleaned the headers to make them all lowercase. 
-- The information within this data set was collected by the Governor's Office of Crime Prevention, Youth and Victim Services and is updated by the Department of Information Technology. It was last updated on May 23, 2022
-- There are 1,104 rows and 38 columns. 
-    a) Each row represents a county in the state of Maryland, a year from 1975-2020, the population during that year and how many murders, raps, aggravated assaults, break and entering, larceny thefts, motor vehicle theft and robberies there were in each county during that year. It then adds it all up into a grand_total column then breaks it down to see how many of the grand total were violent crimes (murder, robbery, rape and aggravated assault) and property crime (break and entering, larceny theft and motor vehicle theft)
-    b) There are multiple columns with calculations like percent change, per captia and violent or property crime percent and percent change. I attempted to replicate the percent change numbers but failed to calculate the exact answers as the data set provides. I'm not sure how they calculated the numbers, but the only calculations I can confirm are correct from my calculations would be the violent_crime_percent, property_crime_percent, violent and property crime totals and per 100,000 crime rate for each crime listed. 
-- There are a few rows containing information from 1975 for percent change that have been replaced with N/A. This could be to them using 1975 as the first year in their percent change calculations. 
 
-----------------------------------------------------------------------------------------------------------------------------
+- Upon completing an initial running of data and quick browse, I noticed the column headers were large. I cleaned the headers to make them all lowercase. 
+- The information within this data set was collected by the Governor's Office of Crime Prevention, Youth and Victim Services and is updated by the Department of Information Technology. It was last updated on May 23, 2022.
+- There are 1,104 rows and 38 columns. 
+    a) Each row represents a county in the state of Maryland, a year from 1975-2020, the population during that year and how many murders, rapes, aggravated assaults, break and entering, larceny thefts, motor vehicle theft and robberies there were in each county during that year. It then adds it all up into a grand_total column then breaks it down to see how many of the grand total were violent crimes (murder, robbery, rape and aggravated assault) and property crime (break and entering, larceny theft and motor vehicle theft).
+    b) There are multiple columns with calculations like percent change, per capita, violent or property crime percent and percent change. I attempted to replicate the percent change numbers but failed to calculate the exact answers as the data set provides. I'm not sure how they calculated the numbers, but the only calculations I can confirm are correct are the violent_crime_percent, property_crime_percent, violent and property crime totals and per 100,000 crime rate for each crime listed. 
+- There are a few rows containing information from 1975 for percent change that have been replaced with N/A. This could be due to them using 1975 as the first year in their percent change calculations. 
+
+-----------------------------------------------------------------------------------------------------------------------------------------
 
 (2) Basic total calculations to see what year and county produced the most crimes by arranging the grand_total column.
+
 ```{r}
 totals <- violent_property_crime |>
   group_by(jurisdiction, year) |>
   arrange(desc(grand_total)) |>
   select(jurisdiction, year, grand_total)
 ```
+
 - Baltimore City in 1995 had the highest total crimes both violent and property with 96,243. The least amount was Kent County with 152 in 2020.
 - 1995 Baltimore City was surprising because I didn't know crime had been high in Baltimore since the 90s. I thought it just started spiking from 2010 and beyond.
 - The first 27 results were from Baltimore City with Prince George's County right behind ranked 28th.
-- Kent County tanked at the bottom in 2020, which wasn't that much of a shock since 2020 crime stats were low for many cities and college campuses.
+- Kent County ranked at the bottom in 2020, which wasn't that much of a shock since 2020 marked the start of the coronavirus pandemic. Crime stats were low for many cities and college campuses.
 
-----------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------
 
-(4) Although the data frame includes information about population I want to gather income data for each county to see if there is a connection with each counties average income and crimes. I grabbed income data from 2019 and combined that with the crime data from 2019, just to have an even comparison.
+(3) Although the data frame includes information about population I want to gather income data for each county to see if there is a connection with each counties average income and crimes. I grabbed income data from 2019 and combined that with the crime data from 2019, just to have an even comparison.
+
 ```{r}
 data_2019 <- violent_property_crime |>
   filter(year == "2019")
@@ -67,32 +72,33 @@ md_with_2019_data |>
 
 write_csv(md_with_2019_data, "data/census_crime_data_2019.csv")
 ```
--  Baltimore City had the most reported crimes in 2019 with 37,219. Kent County is still at the bottom of the rankings. 
-- This makes me wonder why there aren't a lot of violent or property crimes that occur there. Is it because there population is small or that they have laws in place that make it very hard for people to commit crimes? They totaled no murders in 2019, how are they able to come out of the year clean? 
-- These results also let me know that the top 3 counties with the highest total crimes in 2019 had an estimated median income of under $100,000. What correlation is there between income and crime? Does this mean that counties with a middle to high median income produces more crimes? 
+
+-  Baltimore City had the most reported crimes in 2019 with 37,219. Kent County is still at the bottom of the rankings with 504.
+- This makes me wonder why there aren't a lot of violent or property crimes that occur in Kent County. Is it because their population is small or that they have laws in place that make it very hard for people to commit crimes? They totaled no murders in 2019, how are they able to come out of the year clean? 
+- These results also let me know that the top 3 counties with the highest total crimes in 2019 had an estimated median income of under $100,000. What correlation is there between income and crime? Does this mean that counties with a middle to high median income produce more crimes? 
 - Also, does the population have anything to do with it? Montgomery County had 1 million people living there in 2019, yet they still found themselves in the Top 10.
 
-----------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------
 
-(5) The information was so interesting from above I wanted to put it in map form to see how prominent the results were. Below I have linked to a map I created on Datawrapper.
+(4) The information was so interesting from above I wanted to create a map to see how prominent the results were. Below I have linked to a map I created on Datawrapper.
 
 Link: https://datawrapper.dwcdn.net/xEHop/2/
 
-----------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------
 
-(6) Baltimore City has now ranked #1 in two calculations I've produced. I want to explore that data some more to see anything that stands out. Upon first glance, I noticed that the population in the city has fluctuated since 1975. In 2020, they had the lowest population in 45 years with 588,594 residents. 
+(5) Baltimore City has now ranked #1 in two calculations I've produced. I want to explore that data more to see anything else that stands out. Upon first glance, I noticed that the population in the city has fluctuated since 1975. In 2020, they had the lowest population in 45 years with 588,594 residents. 
 
 Question: Does the decrease in population affect the rate of crime? Did specific crimes (violent or property) go up? Which ones decreased with the population? 
 
-Answer: Although 2020 counted for the least number of people living in Baltimore City, the percentage of violent crime went up almost four percentage points. Property crime down about 11 percentage points.
+Answer: Although 2020 counted for the least number of people living in Baltimore City, the percentage of violent crime went up almost four percentage points. Property crime down about 11 percentage points. I would assume with the less people living in the city, the less property there is to steal or damage.
 ```{r}
 baltimore <- violent_property_crime |>
   filter(jurisdiction == "Baltimore City")
 ```
 
-----------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------
 
-(7) Now I want to look at the violent crime percentage for Baltimore city from 1975-2020 to see which year saw the highest percentage.
+(6) Now I want to look at the violent crime percentage for Baltimore city from 1975-2020 to see which year saw the highest percentage.
 
 ```{r}
 baltimore_violent_pct <- baltimore |>
@@ -103,7 +109,10 @@ baltimore_violent_pct
 ```
 
 - 2020 ranks the highest in violent crime percentage which is surprising to me since I thought everyone should have been in the house. Property crime made up about 66% in 2020, which was the lowest out of the 45 year period. 
-- Now let's make a chart to see this in graphic form to see if there's a bigger difference.
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+
+(7) Now let's make a chart to see if there's a bigger difference.
 
 ```{r} 
  baltimore_violent_pct |>
@@ -120,9 +129,11 @@ baltimore_violent_pct
 
 ```
 
-----------------------------------------------------------------------------------------------------------------------------
+- There isn't a crazy difference, but after about 2015 there seemed to be a drastic increase in crime. I would assume this was due to Freddie Gray's death.
 
-(8) Next, I wanted to see which counties that have a high over_18 and under_18 population ranked among crime in 2019.
+-----------------------------------------------------------------------------------------------------------------------------------------
+
+(8) Next, I want to see which counties that have a high over_18 and under_18 population ranked among crime in 2019.
 
 ```{r}
 county_acs_over_18 <- get_acs(geography = "county",
@@ -147,20 +158,20 @@ county_over_18 <- county_acs_over_18 |> inner_join(data_2019, join_by("county" =
   
 county_under_18 <- pop_under_18 |> inner_join(data_2019, join_by("county" == "jurisdiction"))
 
-county_over_18 |>
-  group_by(county) |>
-  arrange(desc(grand_total)) |>
-  select(county, estimate, grand_total, violent_crime_total, property_crime_totals)
-# This let's me know that Montgomery County had the largest total of over 18 population, but they don't rank high with total crime. Out of their data, property crime outweighs violent crime.
-
-county_under_18 |>
+calc_county_over_18 <- county_over_18 |>
   group_by(county) |>
   arrange(desc(estimate)) |>
   select(county, estimate, grand_total, violent_crime_total, property_crime_totals)
-# Montgomery County also ranks high in under_18 population, but they also don't dominate in overall crime in the state. This is interesting to me since Montgomery County seems to have a diverse age range of residents, yet they don't rank high in any grand total crime. Baltimore city ranks the highest in grand total crime, but finds themselves in fourth place in over_18 population and five in under_18. Could we make a conclusion that majority of crimes during this period were comitted by people of all age ranges?
+# This let's me know that Montgomery County had the largest over_18 population, but they don't rank high with total crime. Out of their data, property crime outweighs violent crime.
+
+calc_county_under_18 <- county_under_18 |>
+  group_by(county) |>
+  arrange(desc(estimate)) |>
+  select(county, estimate, grand_total, violent_crime_total, property_crime_totals)
+# Montgomery County also ranks high in under_18 population, but they also don't dominate in overall crime in the state. This is interesting to me since Montgomery County seems to have a diverse age range of residents, yet they don't rank high in any grand total crime. Baltimore city ranks the highest in grand total crime, but finds themselves in fourth place in over_18 population and five in under_18. Could we make a conclusion that majority of crimes during this period were committed by people of all age ranges?
 ```
 
-----------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------
 
 (9) Based on other calculations, I want to dive deeper into Kent County and see what year produced the most crimes for them.
 ```{r}
@@ -172,7 +183,8 @@ kent_county_crime
 ```
 
 - This made me think about what the median age in this county is, so I gathered the median age data to compare it to the data I found on Kent County. 
-- I found that Kent County has a median age of 48. Do this middle to older median age have anything to do with the small amount of violent crimes that are being committed, compared to a city like Baltimore that has a median age of 35, the lowest median age of all the counties in Maryland.
+- I found that Kent County has a median age of 48. Does this middle to older median age have anything to do with the small amount of violent crimes that are being committed, compared to a city like Baltimore that has a median age of 35, the lowest median age of all the counties in Maryland.
+
 ```{r}
 acs5 <- load_variables(2019, "acs5", cache = TRUE)
 
@@ -182,12 +194,16 @@ md_median_age <- get_acs(geography = "county",
               year = 2019)
 
 ```
-- 1975 was the only year where Kent County saw a high number of crime. Majority of their crimes were property crimes with larceny and breaking and entering having the highest numbers. That same year they recorded no murders, which seems to be a common trend in their statistics. They totaled about 30 separate years with no reported murders. This draws my attention more into why Kent County has such low crime statistics. Obviously they have a small population, but what else is it about the residents in this county? Are they strictly deer hunters? Do they live in secluded areas? How many of them own guns?
 
-----------------------------------------------------------------------------------------------------------------------------
+- 1975 was the only year where Kent County saw a high number of crime. Majority of their crimes were property related with larceny and breaking and entering having the highest numbers. That same year they recorded no murders, which seems to be a common trend in their statistics. They totaled about 30 separate years with no reported murders. This draws my attention more into why Kent County has such low crime statistics. Obviously they have a small population, but what else is it about the residents in this county? Are they strictly deer hunters? Do they live in secluded areas? How many of them own guns?
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------
 
 With all the analysis of the data I've done I believe these are three potential stories:
 
 1. After calculating 2019 data, I found that Kent County had no reported murders. I dove deeper into this by only looking at data for Kent County to see if the no murder statistic was a trend and it was. I would like to dive deeper into this story to see what crime policies does Kent County have in place that help reduce their violent crime statistics? Also, what things are they doing to decrease their property crime since those seem to be high. From the data, it looks like their overall crime has been decreasing since 1975 as 1975 was the highest crime reported year. I would also look at the sort of residents that live in the county and why they don't want to kill each other? That would probably be the title of the article too, "Why don't people in Kent County want to kill each other?" Based on the analysis I conducted, Kent County was typically at the bottom of all results, so this spiked my interest into diving deeper into their individual statistics. 
 
-2. Baltimore City, Baltimore County and Prince George's County ranked in the top three of jurisdictions that had a high total crime in 2019. After combining that with median income data, I found that those three averaged under $100,000 in 2019. 
+2. Baltimore City, Baltimore County and Prince George's County ranked in the top three of jurisdictions that had a high grand_total crime in 2019. After combining that with median income data, I found that those three averaged under 100K in median income in 2019. This seemed interesting to me since there were some other counties that had average incomes of way lower than 100K yet they were able to keep their crime at a reasonable or slightly lower level. How important is income when it comes to the amount of crimes that are done? Does someone's income affect the sort of crimes they commit? Are they killing people? Robbing them? Breaking into their homes to find valuables and sell them for money? All of these are things that come to mind when looking at the data. Also, these three counties have a large Black population. I think that statistic plays a huge role in how many Black people are committing crimes in each of these counties. I would be open to combining the total crime data to some racial demographic data to see the relationship between the two. Also to do some calculations and see of the total crimes that are occurring what percentage are done by Black, White, Hispanic, etc. 
+
+3. Baltimore City was at the forefront of majority of the analysis done above. In the bar chart I created, I noticed there was a spike in violent crime after 2015 which was the year Freddie Gray died. Lots of news organizations published stories on how the Gray situation changed policing in the city of Baltimore. They speak about how "cops stop searching for crime," "stopped caring" and "turned a blind eye." I would like to take this investigation further and see why were police officers so afraid to go out and do hard policing? Were they afraid they would do something like what cops did to Freddie Gray? Did they feel they didn't receive the appropriate training to handle a city like Baltimore? Also, how many police officers left the field after the Freddie Gray incident? How did this have an impact on the way the Baltimore City Police Department handled their cases and patrolling around the city? I would like to combine the Baltimore City data with data surrounding the number of police officers within the force from the same time period, 1975-2020 and see how drastic the change was and if they have recovered a small portion of the officers that left.
