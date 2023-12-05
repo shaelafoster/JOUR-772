@@ -76,7 +76,7 @@ write_csv(md_with_2019_data, "data/census_crime_data_2019.csv")
 
 (5) The information was so interesting from above I wanted to put it in map form to see how prominent the results were. Below I have linked to a map I created on Datawrapper.
 
-Link: (review map again and put into this spot)
+Link: https://datawrapper.dwcdn.net/xEHop/2/
 
 ----------------------------------------------------------------------------------------------------------------------------
 
@@ -101,6 +101,7 @@ baltimore_violent_pct <- baltimore |>
 
 baltimore_violent_pct
 ```
+
 - 2020 ranks the highest in violent crime percentage which is surprising to me since I thought everyone should have been in the house. Property crime made up about 66% in 2020, which was the lowest out of the 45 year period. 
 - Now let's make a chart to see this in graphic form to see if there's a bigger difference.
 
@@ -159,28 +160,34 @@ county_under_18 |>
 # Montgomery County also ranks high in under_18 population, but they also don't dominate in overall crime in the state. This is interesting to me since Montgomery County seems to have a diverse age range of residents, yet they don't rank high in any grand total crime. Baltimore city ranks the highest in grand total crime, but finds themselves in fourth place in over_18 population and five in under_18. Could we make a conclusion that majority of crimes during this period were comitted by people of all age ranges?
 ```
 
+----------------------------------------------------------------------------------------------------------------------------
 
-(9) 
+(9) Based on other calculations, I want to dive deeper into Kent County and see what year produced the most crimes for them.
 ```{r}
+kent_county_crime <- violent_property_crime |>
+  filter(jurisdiction == "Kent County") |>
+  arrange(desc(grand_total))
 
+kent_county_crime
 ```
 
+- This made me think about what the median age in this county is, so I gathered the median age data to compare it to the data I found on Kent County. 
+- I found that Kent County has a median age of 48. Do this middle to older median age have anything to do with the small amount of violent crimes that are being committed, compared to a city like Baltimore that has a median age of 35, the lowest median age of all the counties in Maryland.
 ```{r}
+acs5 <- load_variables(2019, "acs5", cache = TRUE)
+
+md_median_age <- get_acs(geography = "county",
+              variables = c(median_age = "B01002_001"),
+              state = "MD",
+              year = 2019)
 
 ```
+- 1975 was the only year where Kent County saw a high number of crime. Majority of their crimes were property crimes with larceny and breaking and entering having the highest numbers. That same year they recorded no murders, which seems to be a common trend in their statistics. They totaled about 30 separate years with no reported murders. This draws my attention more into why Kent County has such low crime statistics. Obviously they have a small population, but what else is it about the residents in this county? Are they strictly deer hunters? Do they live in secluded areas? How many of them own guns?
 
-```{r}
+----------------------------------------------------------------------------------------------------------------------------
 
-```
+With all the analysis of the data I've done I believe these are three potential stories:
 
-```{r}
+1. After calculating 2019 data, I found that Kent County had no reported murders. I dove deeper into this by only looking at data for Kent County to see if the no murder statistic was a trend and it was. I would like to dive deeper into this story to see what crime policies does Kent County have in place that help reduce their violent crime statistics? Also, what things are they doing to decrease their property crime since those seem to be high. From the data, it looks like their overall crime has been decreasing since 1975 as 1975 was the highest crime reported year. I would also look at the sort of residents that live in the county and why they don't want to kill each other? That would probably be the title of the article too, "Why don't people in Kent County want to kill each other?" Based on the analysis I conducted, Kent County was typically at the bottom of all results, so this spiked my interest into diving deeper into their individual statistics. 
 
-```
-
-```{r}
-
-```
-
-```{r}
-
-```
+2. Baltimore City, Baltimore County and Prince George's County ranked in the top three of jurisdictions that had a high total crime in 2019. After combining that with median income data, I found that those three averaged under $100,000 in 2019. 
