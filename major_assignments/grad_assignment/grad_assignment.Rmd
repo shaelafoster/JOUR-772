@@ -96,6 +96,7 @@ baltimore <- violent_property_crime |>
 
 ```{r}
 baltimore_violent_pct <- baltimore |>
+  arrange(desc(violent_crime_percent)) |>
   select(year, violent_crime_percent)
 
 baltimore_violent_pct
@@ -104,22 +105,24 @@ baltimore_violent_pct
 - Now let's make a chart to see this in graphic form to see if there's a bigger difference.
 
 ```{r} 
-#chart to display the violent crime percentage of Baltimore city
  baltimore_violent_pct |>
   ggplot() +
   geom_bar(aes(x=year, weight=violent_crime_percent)) +
-  theme_economist() +
+  theme_calc() +
   labs(
-    title="Baltimore City sees highest violent crime percentage in 2020",
+    title="Baltimore City Sees Highest Violent Crime Percentage in 2020",
     x = "year",
     y = "percentage",
     caption = "source: Governor's Office of Crime Prevention, Youth and Victim Services "
   )
+
+
 ```
 
-(8) Next, I wanted to see which counties that have a high over 18 and under 18 population ranked amongst crime in 2019.
+----------------------------------------------------------------------------------------------------------------------------
 
-Next, I wanted to see if the counties that have a high percentage of over 18 population had any influence on the number of total crimes that occurred. Also, within the total crimes, which section saw the highest numbers, violent or property crime? Combine over_18 population data with the information to see the counties with a low population of over 18 population and see if there is any correlation with violent crime and the low rate of over 18 population. Combine 2019 over 18 data with 2019 county data. 
+(8) Next, I wanted to see which counties that have a high over_18 and under_18 population ranked among crime in 2019.
+
 ```{r}
 county_acs_over_18 <- get_acs(geography = "county",
               variables = c(over_18 = "B09021_001"),
@@ -145,16 +148,15 @@ county_under_18 <- pop_under_18 |> inner_join(data_2019, join_by("county" == "ju
 
 county_over_18 |>
   group_by(county) |>
-  arrange(desc(estimate)) |>
+  arrange(desc(grand_total)) |>
   select(county, estimate, grand_total, violent_crime_total, property_crime_totals)
-# This let's me know that Montgomery County had the largest total of over 18 population, but they don't rank high with total crime. Out of their data, property crime outweighs violent crime. Now let's see which county has a large under 18 population and which crime sector they have more of.
+# This let's me know that Montgomery County had the largest total of over 18 population, but they don't rank high with total crime. Out of their data, property crime outweighs violent crime.
 
 county_under_18 |>
   group_by(county) |>
   arrange(desc(estimate)) |>
   select(county, estimate, grand_total, violent_crime_total, property_crime_totals)
-# Montgomery County also ranks high in under 18 population, but they also don't dominate in overall crime in the state. This is interesting to me since Montgomery County seems to have a diverse age range of residents, yet they don't rank high in any grand total crime totals. Baltimore city ranks the highest in grand total crime, but finds themselves in fourth in over 18 population and five in under 18. Could we make a conclusion that people under 18 are committing the crimes in city or would be evenly weighted?
-
+# Montgomery County also ranks high in under_18 population, but they also don't dominate in overall crime in the state. This is interesting to me since Montgomery County seems to have a diverse age range of residents, yet they don't rank high in any grand total crime. Baltimore city ranks the highest in grand total crime, but finds themselves in fourth place in over_18 population and five in under_18. Could we make a conclusion that majority of crimes during this period were comitted by people of all age ranges?
 ```
 
 
