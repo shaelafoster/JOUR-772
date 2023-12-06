@@ -111,7 +111,7 @@ View(unique_words)
 
 ### Task 7: Make a column chart
 
-**Task** Run the following code and describe what the resulting graphic shows. Is it interesting? **Answer** Yes it's interesting since "the" is a common word. 
+**Task** Run the following code and describe what the resulting graphic shows. Is it interesting? **Answer** Yes, it's interesting since "the" is a common word. Also, it's kind of boring since these aren't "unique words."
 
 Now we can look at the top words in this dataset. Let's limit ourselves to making a plot of the top 25 words, and we'll use the function `count` to do the counting:
 
@@ -161,7 +161,7 @@ From there, we can get a simple word frequency by just grouping them together an
 
 ### Task 9: Using anti_join
 
-**Task** Run the following code and describe the results. Is it more interesting than before? **Answer**
+**Task** Run the following code and describe the results. Is it more interesting than before? **Answer** Yes, it's more interesting since these aren't just articles. Health is ranked high while government is at the bottom. Also, it gives us an insight into the things that he cares about. 
 
 ```{r}
 unique_words |>
@@ -199,7 +199,7 @@ Then we can create top 10 lists for both of them and compare:
 
 ### Task 11: Create dataframes with the top 10 words in each year
 
-**Task** Run the following code and describe the results. **Answer**
+**Task** Run the following code and describe the results. **Answer** It gives us the most popular words he's used in his releases from 2021-2023. It kind of shows how the things that are happening the world alter the things that he speaks about. Past 2021 he doesn't speak about covid anymore, but in 2023 he starts talking about fire, women and rights. 
 
 ```{r}
 unique_words_2021 |>
@@ -232,7 +232,7 @@ The next step in text analysis is using `ngrams`. An `ngram` is any combination 
 
 The code to make ngrams is similar to what we did above, but involves some more twists.
 
-So this block is is going to do the following:
+So this block is going to do the following:
 
 1.  Use the releases data we created above, and filter for pre-2022 releases.
 2.  Unnest the tokens again, but instead we're going to create a field called bigram, break apart summary, but we're going to specify the tokens in this case are ngrams of 2.
@@ -244,7 +244,7 @@ So this block is is going to do the following:
 
 ### Task 12: Create a dataframe with the top 10 two-word phrases for 2021
 
-**Task** Run the following code and describe the results. **Answer**
+**Task** Run the following code and describe the results. **Answer** This gives us two word names that are typically associated together. This list seems more detailed too and not just one word hits. 
 
 ```{r}
 releases |>
@@ -264,7 +264,7 @@ And we already have a different, more nuanced result. Health was among the top s
 
 ### Task 13: Create a dataframe with the top 10 two-word phrases for 2022
 
-**Task** Run the following code and describe the results. **Answer**
+**Task** Run the following code and describe the results. **Answer** Project location is the top word for 2022 with amount included right after. It seems money and locations were his top priority this year. But he still continued to speak aboout health care and covid 19. Prince George's was also a new word that didn't show up in 2021. 
 
 ```{r}
 releases |>
@@ -284,7 +284,7 @@ And 2023?
 
 ### Task 14: Create a dataframe with the top 10 two-word phrases for 2023
 
-**Task** Run the following code and describe the results. **Answer**
+**Task** Run the following code and describe the results. **Answer** Now, he's speaking more about health and rights. Oral health is a weird word that comes into play. It doesn't relate to anything he used to speak about before. Also offshore wind is another word that comes up that didn't appear in any other year. The chesapeake bay is still in the top 10 over these three years. 
 
 ```{r}
 releases |>
@@ -310,7 +310,7 @@ Another popular use of text analysis is to measure the sentiment of a word - whe
 
 ### Task 15: Load the bing lexicon and produce sentiments for our 2021-2023 unique words
 
-**Task** Run the following code and describe the results. Do any of the sentiments seem incorrect or counter-intuitive? **Answer**
+**Task** Run the following code and describe the results. Do any of the sentiments seem incorrect or counter-intuitive? **Answer** The word "issue" is listed as negative, but I'm not sure if it's always seen that way. Issue could be negative or positive but it depends on the text of the information being used in connection with that word.
 
 ```{r}
 bing <- get_sentiments("bing")
