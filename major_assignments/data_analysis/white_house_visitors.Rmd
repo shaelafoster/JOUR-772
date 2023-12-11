@@ -15,7 +15,7 @@ library(janitor)
 library(lubridate)
 ```
 
-Loading all the data
+Loading all the data:
 ```{r}
 jan_22_visitors <- read_csv("data/January_vistors.csv") |> clean_names()
 feb_22_visitors <- read_csv("data/February_visitors.csv") |> clean_names()
@@ -39,7 +39,7 @@ jul_23_visitors <- read_csv("data/july_visitors_23.csv") |> clean_names()
 
 ```
 
-We found out three groups of inconsistencies in the header. So we're cleaning up the outliers.
+We found three groups of inconsistencies in the header. So we're cleaning up the outliers.
 
 #cleaning records part 1
 ```{r}
@@ -83,14 +83,14 @@ c_jan_23_visitors <-jan_23_visitors |> rename(release_date = releasedate)
 c_feb_23_visitors <-feb_23_visitors |> rename(release_date =releasedate)
 ```
 
-#binding the rows of the cleaned dataframes to make one big dataframe with all information in it
+#binding the rows of the cleaned data frames to make one big data frame with all information in it
 ```{r}
 wh_records_combined <- bind_rows(list(c_jan_22_visitors, c_feb_22_visitors, c_mar_22_visitors, c_apr_22_visitors, c_may_22_visitors, c_jun_22_visitors, c_jul_22_visitors, c_aug_22_visitors, c_sep_22_visitors, c_oct_22_visitors, c_nov_22_visitors, c_dec_22_visitors, c_jan_23_visitors, c_feb_23_visitors, may_23_visitors, apr_23_visitors, may_23_visitors, jun_23_visitors, jul_23_visitors))
 
 wh_records_combined
 ```
 
-#creating a column for visitor name that combines first name with last name and middle initial, creating a column of visitee name, and getting rid of unnecessary columns: the x28 and x29 columns that were only in the march 2022 data, caller_room, release_date)
+#creating a column for visitor name that combines first name, last name and middle initial. Creating a column for visitee name. Getting rid of unnecessary columns (x28 and x29, caller_room, release_date)
 ```{r}
 wh_records_combined_names <- wh_records_combined |> mutate(full_name_visitor = paste(first_name, middle_initial, last_name, sep = '_'),
                               full_name_visitee = paste(visitee_first_name, visitee_last_name, sep = '_'))|>
@@ -108,25 +108,22 @@ wh_combined_dates_and_names <- wh_records_combined_names|>
          c_toa = mdy_hm(toa))
 
 ```
-***Discussion*** 
-Flaws and limitations hindering us answering our questions: after cleaning up the data, we believe we will be able to answer question 1 regarding who visited the white house most in 2022 and 2023. 
+***Milestone 2*** 
+After cleaning up the data we believe we'll be able to answer question 1 about who visited the white house the most between 2022 and the first seven months of 2023. Flaws and limitations hindering us answering our questions: after cleaning up the data, we believe we will be able to answer question 1 regarding who visited the white house most in 2022 and 2023. 
 
-We also believe we will be able to answer question 2 - who is visited most often - by looking at the most frequently listed visitees. 
+We also think we'll be able to answer question 2 (who is visited most often) by observing the most frequently listed visitee. We'll also be able to answer what percentage of the visits are to the president or first lady. 
 
-We can also look at what percentage of the visits are to the POTUS (president) or even to the FLOTUS (first lady)
+For the question regarding what time of day, day of the week, etc. is the busiest we could use the toa (time of appointment) column but there are several N/A's listed. If we find anything we will have to be cautious. Also, the date and time are combined into one column so we'll need to split them up. 
 
-For which time of day, day of the week, etc. is busiest, we could toa data, however there are several NAs in that column. So any findings we make will have to be caveated by that. Also, the date and time are combined in one column, we may need to look into how we can split those. 
+We won't be able to answer question five since we can't calculate the length of appointments. The toa is listed, but the tod (time of departure) is not. The end date for all appointments is 11:59 on the day of the appointment, but we know there's no guarantee everyone stayed until midnight for their appointment. With this, we won't be able to determine anything. 
 
-Question 5 - the average length of appointment is UNATAINABLE. While time of arrival (toa) is recorded, time of departure (tod) is not. Appointment end date is always 11:59 the day of the appointment. The data will not allow us to determine length of appointments. 
+We also might have trouble answering question six regarding how frequently does house or senate leaders visit the White House? A better question we think would be: what percentage of the logged visits are from leaders of the house or senate? We haven't fully investigated this question, but we believe we could create a list of name of high-ranked leaders (speaker of the house, minority whip, etc.) and writing code using string detect and mutate and case when to create a column that will be marked yes if the entry is a member of the house of senate leadership and no if they aren't. 
 
-Question 6 - how frequently does house or senate leadership visit the WH? A better question is what percentage of the logged visits are from leaders of the house or senate. We haven't thoroughly investigated this question yet, but we believe that we could create a list of names of high-ranking leadership: speaker of the house, minority whip, etc., and write a code using string detect and mutate to create a column that will be marked as yes if the entry is from a member of the house/senate leadership, and no if it is not. 
-
-Additional note: cleaning up the dates, particularly in the appointment_start_date column. We believe this is because the dates are characters and some are written with the hour and minute format and others are not. Not sure if this is something that can be resolved by using open refine? 
-***Discussion***
-
+***Answering Questions***
 
 Question 1: Who visits the most? 
-Answer: Michael N Herzog visits the white house the most with 108 visits. After doing research I found that he's Israel's Ambassador to the U.S.
+
+Answer: Michael N Herzog visits the white house the most with 108 visits. After doing research I found out he's Israel's Ambassador to the U.S. This finding was interesting as we could explore what months he frequently visited. We won't be able to know what he came to speak with people about, but we could observe what the current climate of the country was and determine if that's something he would want to speak with representatives about. 
 ```{r}
 wh_records_combined_names |>
   group_by(full_name_visitor) |>
@@ -138,9 +135,11 @@ wh_records_combined_names |>
 wh_records_combined_names
 ```
 
-## Need to use Open Refine to clean up all these names ##
+# Used OpenRefine to clean up some visitee names #
+
 Question 2: Who gets the most visitors?
-Answer: Ed Teleky (Director of Ceremonies at the White House), Gionelly Mills (Staff Assistant focusing on Communications, Celebrity Engagement and Events at the WH), Lydia Hecmanczuk (IT Specialist in the Executive Office of the President)
+
+Answer: Ed Teleky (Director of Ceremonies at the White House), Gionelly Mills (Staff Assistant focusing on Communications, Celebrity Engagement and Events at the WH), Lydia Hecmanczuk (IT Specialist in the Executive Office of the President). The one that seemed interesting to me was Kevin Ballen, advisor to the director of the national economic council. 
 ```{r}
 wh_records_combined_names |>
   group_by(full_name_visitee) |>
@@ -148,7 +147,9 @@ wh_records_combined_names |>
   arrange(desc(count_visitee))
 ```
 
+
 Question 3: How frequently does the president get visitors?
+
 Answer: Roughly 8.9% of visitors at the WH say they are visiting just the president.
 ```{r}
 wh_records_refined|>
@@ -159,32 +160,33 @@ wh_records_refined|>
 ```
 
 Question 4: What time of the day is the busiest for visitors? What day of the week? Which week of the year? (2022 = complete year)
-Answer: 10 a.m. received the most number os visits. July was the month with the most visits. Week 26 was the week with the greatest amount of visits. Saturday was the day of the week with the most number of visits. 
+
+Answer: 10 a.m. received the most number os visits. May was the month with the most visits. Week 26 was the week with the greatest amount of visits. Saturday was the day of the week with the most number of visits. 
 ```{r}
 #adding a column for month, day of the week, week in the year, and hour in the day
-wh_records_combined_dates_and_names_wo_extra_mutated <- wh_records_combined_dates_and_names_wo_extra |>
-  mutate (hour = hour(toa_cln)) |>
-  mutate (month = month(toa_cln)) |>
-  mutate (weekdays = weekdays(toa_cln)) |>
-  mutate (week = week(toa_cln))
+wh_combined_dates_and_names_no_extra_mutated <- wh_combined_dates_and_names |>
+  mutate (hour = hour(c_toa)) |>
+  mutate (month = month(c_toa)) |>
+  mutate (weekdays = weekdays(c_toa)) |>
+  mutate (week = week(c_toa))
 
-#most common hour- 10 A.M.
-wh_records_combined_dates_and_names_wo_extra_mutated |>
+#most common hour- 10 A.M. (93, 720 visits)
+wh_combined_dates_and_names_no_extra_mutated |>
   group_by(hour) |>
   summarise(count_visits = n())|>
   arrange(desc(count_visits))
-#most common month- July 
-wh_records_combined_dates_and_names_wo_extra_mutated |>
+#most common month- May (136, 318 visits)
+wh_combined_dates_and_names_no_extra_mutated |>
   group_by(month) |>
   summarise(count_visits = n())|>
   arrange(desc(count_visits))
-#most common week- week 24 (mid June)
-wh_records_combined_dates_and_names_wo_extra_mutated |>
+#most common week- week 19?? (Mid May)
+wh_combined_dates_and_names_no_extra_mutated |>
   group_by(week) |>
   summarise(count_visits = n())|>
   arrange(desc(count_visits))
-#most common weekday- Saturday
-wh_records_combined_dates_and_names_wo_extra_mutated |>
+#most common weekday- Friday
+wh_combined_dates_and_names_no_extra_mutated |>
   group_by(weekdays) |>
   summarise(count_visits = n())|>
   arrange(desc(count_visits))
@@ -192,10 +194,13 @@ wh_records_combined_dates_and_names_wo_extra_mutated |>
 
 Question 5: How frequently does House or Senate leadership visit the White House?
 
+Answer: 
 ```{r}
-wh_records_last_names <- wh_records_combined_dates_and_names |>
-wh_records_leadership <- wh_records_names|>
-  filter(full_names_visitor %in% c("PATTY_L_MURRAY","RICHARD_J_DURBIN","CHARLES_N_SCHUMER","ELIZABETH_N_WARREN","MARK_R_WARNER","ADDISON_M_MCCONNELL","JOHN_R_THUNE","KATHERINE_C_PHILLIPSBARRASSO","SHELLEY_M_CAPITO", "STEVE_J_SCALISE","HAKEEM_N_JEFFRIES","KATHERINE_M_CLARK","PETER_R_AGUILAR", "JAMES_E_CLYBURN","JAMES_M_JOHNSON","EMMER","STEFANIK", "PALMER"))
-
-
+wh_records_leadership <- wh_records_combined_names|>
+  filter(full_name_visitor %in% c("PATTY_L_MURRAY","RICHARD_J_DURBIN","CHARLES_N_SCHUMER","ELIZABETH_N_WARREN","MARK_R_WARNER","ADDISON_M_MCCONNELL","JOHN_R_THUNE","KATHERINE_C_PHILLIPSBARRASSO","SHELLEY_M_CAPITO", "STEVE_J_SCALISE","HAKEEM_N_JEFFRIES","KATHERINE_M_CLARK","PETER_R_AGUILAR", "JAMES_E_CLYBURN","JAMES_M_JOHNSON","EMMER","STEFANIK", "PALMER"))
 ```
+
+****Milestone 3***
+So far, the most interesting story surrounds the category of most frequent person visited. It wouldn't be a hard news story since we haven't discovered anything weird. It would serve as a good behind-the-scenes/feature piece. 
+
+***Final***
